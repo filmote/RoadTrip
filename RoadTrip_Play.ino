@@ -1,0 +1,800 @@
+#include <stdint.h>
+
+
+// ----------------------------------------------------------------------------
+//  Initialise state ..
+//
+void game_Init() {
+
+    #ifdef SOUNDS
+
+        sound.noTone();
+
+    #endif
+
+    world.reset();
+    car.reset();
+    gamePlayVars.reset();
+    gameOverVars.reset();
+
+    cameraPos.setX(0);
+    cameraPos.setY(UPM);
+    cameraPos.setZ(-40);
+
+    for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+
+        OtherCar &otherCar = otherCars[i];
+
+        otherCar.setX(0);
+        otherCar.setZ(400 + (i * 145));
+        otherCar.setSpeed(random(4, 8) * Constants::SpeedDiv);
+
+    }
+
+    placeCactii();
+
+    gameState = GameState::Game;
+
+}
+
+
+// ----------------------------------------------------------------------------
+//  Handle state updates .. 
+//
+void game() {
+
+
+    #ifdef SOUNDS
+
+        if (car.getGear() > 0 && !sound.playing()) {
+
+            sound.tones(Sounds::Drive[car.getTacho()]);
+        }
+
+    #endif
+
+
+    switch (car.getTransmissionType()) {
+        
+        case TransmissionType::Manual:
+
+            if (arduboy.justPressed(UP_BUTTON)) {
+
+                car.incGear();
+
+            }
+
+            if (arduboy.justPressed(DOWN_BUTTON)) {
+
+                bool brakes = car.decGear();
+
+                if (brakes) {
+
+                    gamePlayVars.brakeCount = Constants::BrakeCloud_DownGear;
+                    gamePlayVars.brakeSide = Direction::Both;
+                    
+                }
+
+            }
+
+            break;
+
+        case TransmissionType::Auto:
+        
+            if (car.getTransmissionType() == TransmissionType::Auto && car.getTacho() == 8 && car.getGear() > 0) {
+
+                car.incGear();
+
+            }
+
+            if (car.getTransmissionType() == TransmissionType::Auto && car.getTacho() == 1 && car.getGear() > 1) {
+
+                car.decGear();
+
+            }
+
+            if (arduboy.justPressed(UP_BUTTON) && car.getGear() == 0) {
+
+                car.incGear();
+
+            }
+
+            if (arduboy.justPressed(DOWN_BUTTON) && car.getGear() == 1) {
+
+                car.decGear();
+
+            }
+
+            break;
+
+    }
+
+    draw(true);
+
+    // Render details ..
+
+    renderPlayerCar();
+    renderHud();
+    renderDayBanner();
+    
+
+    // Do some house keeping ..
+
+    houseKeeping();
+    moveCactii();
+    
+
+    // When moving left or right, the speed must be > 0 .. 
+
+    bool offRoad = false;
+    uint8_t speed = car.getSpeed_Display();
+
+
+
+    // If automatic, make sure the player can get out of the rough ..
+
+    if (speed == 1 && car.getTransmissionType() == TransmissionType::Auto && car.getGear() != 0) {
+
+        speed = 2;
+
+    }
+
+    #ifndef DEBUG_MOVE_WHILE_STATIONARY
+
+        if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-(speed / 2), 0) == Constants::NoCollision) {
+            cameraPos.setX(cameraPos.getX() - (speed / 2));
+            car.setX(car.getX() - (speed / 2));
+        }
+
+        if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speed / 2, 0) == Constants::NoCollision) {
+            cameraPos.setX(cameraPos.getX() + (speed / 2));
+            car.setX(car.getX() + (speed / 2));
+        }
+
+
+        Vec3 segClosest = world.getRoadSegment(0, car.getZ());
+        Vec3 segNext = world.getRoadSegment(car.getZ(), car.getZ() + UPM);
+
+        // Serial.print("Car: ");
+        // Serial.print(        car.getX()   );
+        // Serial.print(", World1: ");
+        // Serial.print(  segClosest.getX()  );
+        // Serial.print(", World2: ");
+        // Serial.print(  segNext.getX()  );
+        //   Serial.print(" = ");     
+        // Serial.println(        car.getX() - ((segClosest.getX() + segNext.getX()) / 2)  );
+
+        int16_t carOffsetOnRoad = car.getX() - ((segClosest.getX() + segNext.getX()) / 2);
+
+        if (speed > 0 && gamePlayVars.brakeCount == 0) {
+
+            switch (carOffsetOnRoad) {
+
+                case -1000 ... -191:
+
+                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                    gamePlayVars.brakeSide = Direction::Both;
+                    offRoad = true;
+
+                    break;
+
+                case -190 ... -130:
+
+                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                    gamePlayVars.brakeSide = Direction::Left;
+                    offRoad = true;
+
+                    break;
+
+                case 130 ... 190:
+
+                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                    gamePlayVars.brakeSide = Direction::Right;
+                    offRoad = true;
+
+                    break;
+
+                case 191 ... 1000:
+
+                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                    gamePlayVars.brakeSide = Direction::Both;
+                    offRoad = true;
+
+                    break;
+
+            }
+
+        }
+
+    #endif
+
+    #ifdef DEBUG_MOVE_WHILE_STATIONARY
+
+        if (arduboy.pressed(LEFT_BUTTON)) {
+            moveCar(-2, 0);
+            cameraPos.setX(cameraPos.getX() - 2);
+            car.setX(car.getX() - (speed / 2));
+        }
+
+        if (arduboy.pressed(RIGHT_BUTTON)) {
+            moveCar(2, 0);
+            cameraPos.setX(cameraPos.getX() + 2);
+            car.setX(car.getX() + (speed / 2));
+        }
+
+    #endif
+
+    uint8_t collide = Constants::NoCollision;
+
+    if (arduboy.isFrameCount(4)) {
+
+
+        uint16_t tacho = car.getTacho();
+
+        //if (tacho == 8) speed = 0;
+
+        collide = moveCar(0, speed);
+
+        CarMovement carMovement = CarMovement::NoMovement;
+
+        if (collide == Constants::NoCollision) {
+// Serial.print("Gear: ");
+// Serial.print(car.getGear());
+// Serial.print(", tacho: ");
+// Serial.println(tacho);
+
+            if (!offRoad || car.getGear() == 1) {
+
+                if (arduboy.pressed(A_BUTTON) && ((car.getGear() == 1 || tacho > 1) && tacho < 8)) {
+
+
+                    // If accelerating from a stand still, render the dirt cloud ..
+
+
+                    if (car.getSpeed().getInteger() == 0) {
+                        gamePlayVars.brakeCount = Constants::BrakeCloud_Accelerate;
+                        gamePlayVars.brakeSide = Direction::Both;       
+                        gamePlayVars.showDayBannerCount = 0;             
+                    }
+
+                    carMovement = CarMovement::Accelerate;
+
+                }
+                else if (arduboy.pressed(A_BUTTON) && (tacho == 8 || (car.getGear() > 1 && tacho == 1))) {
+
+                    carMovement = CarMovement::NoMovement;
+
+                }
+                else {
+
+                    carMovement = CarMovement::Deccelerate;
+
+                }
+
+            }
+            else {
+
+                carMovement = CarMovement::Deccelerate;
+
+            }
+
+            car.changeSpeed(carMovement);
+
+        }
+        else {
+
+            OtherCar &otherCar = otherCars[collide];
+
+            if (arduboy.pressed(A_BUTTON)) {
+                car.setSpeed(otherCar.getSpeed());
+                otherCar.setZ(car.getZ() + Constants::PlayerCarLengthUnits);
+
+                #ifdef DEBUG_COLLISIONS
+                    Serial.println("set speed 1");
+                #endif
+            }
+            else {
+
+                if (!offRoad) {
+                    car.changeSpeed(CarMovement::NoMovement);
+                }
+                else{
+                    car.changeSpeed(CarMovement::Deccelerate);
+                }
+
+            }
+
+        }
+
+    }
+    else {
+
+
+        collide = moveCar(0, speed);
+
+        //CarMovement carMovement = CarMovement::NoMovement;
+
+        if (collide != Constants::NoCollision) {
+
+            OtherCar &otherCar = otherCars[collide];
+
+            if (otherCar.getZ() > car.getZ()) {
+                car.setSpeed(otherCar.getSpeed());
+                otherCar.setZ(car.getZ() + Constants::PlayerCarLengthUnits);
+                #ifdef DEBUG_COLLISIONS
+                    Serial.println("set speed 2");
+                #endif
+
+            }
+
+        }
+
+    }
+    
+
+
+
+    // Now, after adjusting the car's speed for collisions, move the car forward ..
+
+    if (gamePlayVars.showDayBannerCount == 0 || gamePlayVars.days > 1) {
+
+        speed = car.getSpeed_Display();
+
+        car.setZ(car.getZ() + speed);
+        cameraPos.setZ(cameraPos.getZ() + speed);
+        cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
+
+        moveOtherCars(collide != Constants::NoCollision);
+
+    }
+
+
+}
+
+
+// ----------------------------------------------------------------------------
+// Render the screen .. 
+//
+void draw(bool drawOtherCars) {
+    
+    Vec3 startPos, endPos;
+
+    uint16_t indexFrom = cameraPos.getZ() / UPM;
+    uint16_t indexTo = indexFrom + DRAW_DISTANCE; 
+
+
+    // draw road segments starting with the backmost one first ..
+    // IndexTo is the last position and is an ever increasing value.
+
+    if (gamePlayVars.oldIndexTo != indexTo + 5) {
+        world.addRoadSegment(indexTo + 5);
+        gamePlayVars.oldIndexTo = indexTo + 5;
+    }
+
+    for (uint16_t i = indexTo; i > indexFrom; --i) {
+
+        Vec3 startVec = world.getRoadSegment(i);
+        Vec3 endVec = world.getRoadSegment(i + 1);
+
+        startPos = world.perspective(startVec, cameraPos);
+        endPos   = world.perspective(endVec, cameraPos);
+
+        int16_t x1Bottom = startPos.getX() - startPos.getZ() * 1.25;
+        int16_t x2Bottom = x1Bottom + startPos.getZ() * 2.5;
+        int16_t x1Top = endPos.getX() - endPos.getZ() * 1.25;
+        int16_t x2Top = x1Top + endPos.getZ() * 2.5;
+
+        int16_t x1Diff = x1Top - x1Bottom;
+        int16_t x2Diff = x2Top - x2Bottom;
+
+
+        // Draw Horizon ..
+
+        if (i == indexTo) {
+
+            Vec3 frontMost = world.getRoadSegment(indexFrom);
+            gamePlayVars.horizonX = frontMost.getX() / 4;
+
+            uint8_t height = (gamePlayVars.getTimeOfDay() == TimeOfDay::Night ? 14 : 9);
+            uint8_t idx = static_cast<uint8_t>(gamePlayVars.getTimeOfDay());
+
+            for (int16_t i = gamePlayVars.horizonX - 128; i < WIDTH; i = i + 128) {
+
+                Sprites::drawExternalMask(i, endPos.getY() - height, Images::Horizons, Images::Horizons_Mask, idx, idx == 2 ? 1 : 0);
+
+            }
+
+        }
+
+
+        bool odd = i % 2;
+
+        // if visible (ie leaning towards camera) ..
+
+        if (startPos.getY() > endPos.getY() && startPos.getZ() > 0 && endPos.getZ() > 0) {
+
+            int16_t segmentHeight = startPos.getY() - endPos.getY();
+            int16_t y = startPos.getY();
+
+            for (int16_t j = 0; j < segmentHeight; ++j) {
+
+                int16_t pos1 = x1Bottom + (j * x1Diff) / segmentHeight;
+                int16_t pos2 = x2Bottom + (j * x2Diff) / segmentHeight;
+
+                if (y >= DISPLAY_HEIGHT) {
+                    y--;
+                    continue;
+                }
+
+                pos1 = max(0, pos1);
+                pos2 = min(DISPLAY_WIDTH, pos2);
+
+                bool dither = j % 2;
+                bool color = y % 2;
+
+                // Odd line
+                if (odd) {
+
+
+                    int16_t k = 0;
+
+                    switch (gamePlayVars.getTimeOfDay()) {
+
+                        case TimeOfDay::Day:
+                            renderRoadEdge_Light(k, pos1, y);
+                            renderRoad_Dither_Light(k, pos2, y, color);
+                            renderRoadEdge_Light(k, DISPLAY_WIDTH, y);
+                            break;
+
+                        case TimeOfDay::Dawn:
+                            renderRoadEdge_Black(k, pos1, y, color);
+                            renderRoad_Dither_Light(k, pos2, y, color);
+                            renderRoadEdge_Black(k, DISPLAY_WIDTH, y, color);
+                            break;
+
+                        case TimeOfDay::Night:
+                            color = y % 2;
+                            renderRoadEdge_Dark(k, pos1, y, color);                        
+                            renderRoad_Black(k, pos2, y, color);
+                            renderRoadEdge_Dark(k, DISPLAY_WIDTH, y, color);
+                            break;
+
+                    }
+
+                }
+
+                // Even line
+                else {
+                    
+                    int16_t k = 0;
+                    
+                    switch (gamePlayVars.getTimeOfDay()) {
+
+                        case TimeOfDay::Day:
+                            color = y % 2;
+                            renderRoadEdge_Dark(k, pos1, y, color);
+                            dither = j % 2;
+                            renderRoad_Dither_Dark(k, pos2, y, dither, color);
+                            renderRoadEdge_Dark(k, DISPLAY_WIDTH, y, color);
+                            break;
+
+                        case TimeOfDay::Dawn:
+                            color = y % 2;
+                            renderRoadEdge_Dark(k, pos1, y, color);
+                            dither = j % 2;
+                            renderRoad_Dither_Dark(k, pos2, y, dither, color);
+                            renderRoadEdge_Dark(k, DISPLAY_WIDTH, y, color);
+                            break;
+
+                        case TimeOfDay::Night:
+                            renderRoadEdge_Black(k, pos1, y, color);
+                            dither = j % 2;
+                            renderRoad_Dither_Dark(k, pos2, y, dither, color);
+                            renderRoadEdge_Black(k, DISPLAY_WIDTH, y, color);
+                            break;
+
+                    }
+
+                }
+
+                y--;
+            }
+
+
+            // Draw lines ..
+
+            if (!odd) {
+
+                int16_t pos1Top = x1Bottom + x1Diff;
+                int16_t pos2Top = x2Bottom + x2Diff;
+
+                int16_t pBottom = (x2Bottom - x1Bottom) / 6; 
+                int16_t pTop = (pos2Top - pos1Top) / 6;
+
+                int16_t centreTop = (x1Top + x2Top) / 2;
+                int16_t centreBottom = (x1Bottom + x2Bottom) / 2;
+
+                arduboy.drawLine(centreBottom - pBottom,startPos.getY(),centreTop - pTop,endPos.getY(),WHITE);
+                arduboy.drawLine(centreBottom + pBottom,startPos.getY(),centreTop + pTop,endPos.getY(),WHITE);
+
+            }
+
+        }
+
+
+    
+        if (drawOtherCars) {
+
+
+            // draw other cars ..
+
+            for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+
+                OtherCar &otherCar = otherCars[i];
+
+
+                // If the other car is within the road segment being rendered then render it ..
+
+                if (otherCar.getZ() > startVec.getZ() && otherCar.getZ() <= endVec.getZ()) {
+
+
+                    // Render cars based on time of day ..
+                    
+                    uint8_t imageIndex = gamePlayVars.getTimeOfDay() == TimeOfDay::Night ? 1 : 0;
+
+
+                    
+                    // Add the average road segement x value to the car ..
+
+    // Serial.print("otherCar x:");
+    // Serial.print(otherCar.getX());
+    // Serial.print(", xWorld:");
+    // Serial.println((startVec.getX() + endVec.getX()) / 2);
+                    otherCar.setXWorld((startVec.getX() + endVec.getX()) / 2);
+                    //otherCar.setX((startVec.getX() + endVec.getX()) / 2);
+                    otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+                    //otherCar.setZ((startVec.getZ() + endVec.getZ()) / 2);
+                    //otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+
+    // Serial.print("Render ");
+    // Serial.print(otherCar.getX());
+    // Serial.print(",");
+    // Serial.print(startVec.getX());
+    // Serial.print(",");
+    // Serial.println(endVec.getX());
+
+
+                    #ifndef DEBUG_COLLISIONS
+
+                        Vec3 otherCarNonRef = otherCar.clone();
+                        otherCarNonRef.setX(otherCar.getX() + otherCar.getXWorld());
+                        // Vec3 worldSeg = otherCar.clone();
+                        // worldSeg.setX(otherCar.getXWorld());
+                        // Vec3 worldPerspective = world.perspective(worldSeg, cameraPos);
+
+                        Vec3 carPerspective = world.perspective(otherCarNonRef, cameraPos);
+                        int16_t distToCar = otherCar.getZ() - cameraPos.getZ();
+
+
+                        // Only render the cars if they are visible ..
+
+                        uint8_t index = 0;
+
+                        if (distToCar > -50 && distToCar < 650) {
+                            
+                            switch (distToCar) {
+
+                                case 460 ... 650: // 100
+                                    index = 5;
+                                    break;
+
+                                case 360 ... 459: // 90
+                                    index = 4;
+                                    break;
+
+                                case 290 ... 359: // 90
+                                    index = 3;
+                                    break;
+
+                                case 220 ... 289: // 80
+                                    index = 2;
+                                    break;
+
+                                case 180 ... 219: // 50
+                                    index = 1;
+                                    break;
+
+                                default:
+                                    index = 0;
+                                    break;
+
+                            }
+                    
+                            Sprites::drawPlusMask(carPerspective.getX() - (pgm_read_byte(&Images::OtherCar_Width[index]) / 2), carPerspective.getY() - pgm_read_byte(&Images::OtherCar_Height[index]) + 1, Images::OtherCar[index], imageIndex);
+
+                        }
+
+                    #else
+
+                        Vec3 leftTopCorner = otherCar.clone();
+                        leftTopCorner.setX(leftTopCorner.getX() + otherCar.getXWorld() - (Constants::OtherCarWidthUnits / 2));
+                        leftTopCorner.setZ(leftTopCorner.getZ() + Constants::OtherCarLengthUnits);
+
+                        Vec3 rightTopCorner = otherCar.clone();
+                        rightTopCorner.setX(rightTopCorner.getX() + otherCar.getXWorld() + (Constants::OtherCarWidthUnits / 2));
+                        rightTopCorner.setZ(rightTopCorner.getZ() + Constants::OtherCarLengthUnits);
+                        
+                        Vec3 leftBottomCorner = otherCar.clone();
+                        leftBottomCorner.setX(leftBottomCorner.getX() + otherCar.getXWorld() - (Constants::OtherCarWidthUnits / 2));
+
+                        Vec3 rightBottomCorner = otherCar.clone();
+                        rightBottomCorner.setX(rightBottomCorner.getX() + otherCar.getXWorld() + (Constants::OtherCarWidthUnits / 2));
+                        
+                        Vec3 leftTopCornerPersepective = world.perspective(leftTopCorner, cameraPos);
+                        Vec3 rightTopCornerPersepective = world.perspective(rightTopCorner, cameraPos);
+                        Vec3 leftBottomCornerPersepective = world.perspective(leftBottomCorner, cameraPos);
+                        Vec3 rightBottomCornerPersepective = world.perspective(rightBottomCorner, cameraPos);
+
+                        arduboy.drawLine(leftTopCornerPersepective.getX(), leftTopCornerPersepective.getY(), rightTopCornerPersepective.getX(), rightTopCornerPersepective.getY());
+                        arduboy.drawLine(rightTopCornerPersepective.getX(), rightTopCornerPersepective.getY(), rightBottomCornerPersepective.getX(), rightBottomCornerPersepective.getY());
+                        arduboy.drawLine(rightBottomCornerPersepective.getX(), rightBottomCornerPersepective.getY(), leftBottomCornerPersepective.getX(), leftBottomCornerPersepective.getY());
+                        arduboy.drawLine(leftBottomCornerPersepective.getX(), leftBottomCornerPersepective.getY(), leftTopCornerPersepective.getX(), leftTopCornerPersepective.getY());
+
+                    #endif
+
+                }
+
+            }
+
+        }
+
+
+        // Draw Cactii
+
+        for (uint8_t j = 0; j < Constants::NumberOfCactii; j++) {
+
+            Vec3 &cactiiPos = cactii[j];
+
+            if (cactiiPos.getZ() > startVec.getZ() && cactiiPos.getZ() <= endVec.getZ()) {
+
+                uint8_t cactiiIdx = 0;
+
+                if (i > indexFrom + 2 && i < indexFrom + 4) {
+                    cactiiIdx = 4;
+                }
+
+                if (i >= indexFrom + 4 && i < indexFrom + 6) {
+                    cactiiIdx = 3;
+                }
+
+                if (i >= indexFrom + 6 && i < indexFrom + 8) {
+                    cactiiIdx = 2;
+                }
+
+                if (i >= indexFrom + 8 && i < indexFrom + 10) {
+                    cactiiIdx = 1;
+                }
+
+                if (i >= indexFrom + 10) {
+                    cactiiIdx = 0;
+                }
+
+                if (cactiiPos.getX() == 0) {
+
+                    Sprites::drawPlusMask(x1Bottom - 12 - (pgm_read_byte(&Images::Cactii_Width[cactiiIdx]) / 2), startPos.getY() - pgm_read_byte(&Images::Cactii_Height[cactiiIdx]), Images::Cactii[cactiiIdx], 0);
+
+                }
+                else {
+
+                    Sprites::drawPlusMask(x2Bottom + 13 - (pgm_read_byte(&Images::Cactii_Width[cactiiIdx]) / 2), startPos.getY() - pgm_read_byte(&Images::Cactii_Height[cactiiIdx]), Images::Cactii[cactiiIdx], 0);
+
+                }
+
+            }
+
+        }
+
+
+        // Sign posts / rocks ..
+
+        if (odd && i > indexFrom + 2) {
+
+            #ifdef ROCKS
+                
+                uint8_t rockIdx = 0;
+
+                if (i > indexFrom + 2 && i < indexFrom + 4) {
+                    rockIdx = 3;
+                }
+
+                if (i >= indexFrom + 4 && i < indexFrom + 6) {
+                    rockIdx = 2;
+                }
+
+                if (i >= indexFrom + 6 && i < indexFrom + 8) {
+                    rockIdx = 1;
+                }
+
+                if (i >= indexFrom + 8) {
+                    rockIdx = 0;
+                }
+
+                int16_t spriteSize = Images::Rocks_Width[rockIdx];
+
+                Sprites::drawPlusMask(x1Bottom - spriteSize, startPos.getY() - spriteSize, Images::Rocks[rockIdx], 0);
+                Sprites::drawPlusMask(x2Bottom , startPos.getY() - spriteSize, Images::Rocks[rockIdx], 0);
+                
+            #endif
+
+            #ifdef SIGNPOSTS
+
+                #ifdef LARGER_SIGNPOSTS
+
+                    int16_t spriteSize = startPos.getZ() / 2;
+
+                    switch (gamePlayVars.getTimeOfDay()) {
+
+                        case TimeOfDay::Dawn:
+                        case TimeOfDay::Night:
+
+                            arduboy.drawRect(x1Bottom - spriteSize,startPos.getY() - spriteSize,spriteSize / 2,spriteSize, WHITE);
+                            arduboy.fillRect(x1Bottom - spriteSize + 1,startPos.getY() - spriteSize + 1,spriteSize / 2 - 2,spriteSize - 1, BLACK);
+
+                            arduboy.drawRect(x2Bottom + spriteSize / 2,startPos.getY() - spriteSize,spriteSize / 2,spriteSize, WHITE);
+                            arduboy.fillRect(x2Bottom + spriteSize / 2 + 1,startPos.getY() - spriteSize + 1,spriteSize / 2 - 2,spriteSize - 1, BLACK);
+
+                            break;
+
+                        default:
+
+                            arduboy.drawRect(x1Bottom - spriteSize,startPos.getY() - spriteSize,spriteSize / 2,spriteSize, BLACK);
+                            arduboy.fillRect(x1Bottom - spriteSize + 1,startPos.getY() - spriteSize + 1,spriteSize / 2 - 2,spriteSize - 1,WHITE);
+
+                            arduboy.drawRect(x2Bottom + spriteSize / 2,startPos.getY() - spriteSize,spriteSize / 2,spriteSize, BLACK);
+                            arduboy.fillRect(x2Bottom + spriteSize / 2 + 1,startPos.getY() - spriteSize + 1,spriteSize / 2 - 2,spriteSize - 1, WHITE);
+
+                            break;
+
+                    }
+
+                #endif
+
+                #ifdef SMALLER_SIGNPOSTS
+
+                    int16_t spriteSize = (startPos.getZ() / 2) - 2;
+
+                    switch (gamePlayVars.getTimeOfDay()) {
+
+                        case TimeOfDay::Dawn:
+                        case TimeOfDay::Night:
+
+                            arduboy.drawRect(x1Bottom - spriteSize, startPos.getY() - spriteSize + 2, spriteSize / 2, spriteSize - 2, WHITE);
+                            arduboy.fillRect(x1Bottom - spriteSize + 1, startPos.getY() - spriteSize + 3,spriteSize / 2 - 2, spriteSize - 3, BLACK);
+
+                            arduboy.drawRect(x2Bottom + spriteSize / 2, startPos.getY() - spriteSize + 2, spriteSize / 2, spriteSize - 2, WHITE);
+                            arduboy.fillRect(x2Bottom + spriteSize / 2 + 1, startPos.getY() - spriteSize + 3, spriteSize / 2 - 2, spriteSize - 3, BLACK);
+
+                            break;
+
+                        default:
+
+                            arduboy.drawRect(x1Bottom - spriteSize, startPos.getY() - spriteSize + 2, spriteSize / 2, spriteSize - 2, BLACK);
+                            arduboy.fillRect(x1Bottom - spriteSize + 1, startPos.getY() - spriteSize + 3, spriteSize / 2 - 2, spriteSize - 3, WHITE);
+
+                            arduboy.drawRect(x2Bottom + spriteSize / 2, startPos.getY() - spriteSize + 2, spriteSize / 2, spriteSize - 2, BLACK);
+                            arduboy.fillRect(x2Bottom + spriteSize / 2 + 1, startPos.getY() - spriteSize + 3, spriteSize / 2 - 2, spriteSize - 3, WHITE);
+
+                            break;
+
+                    }
+
+                #endif
+
+
+            #endif
+
+        }
+
+    }
+  
+}
