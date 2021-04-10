@@ -546,7 +546,7 @@ void draw(bool drawOtherCars) {
             // draw other cars ..
 
 
-            for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
+            for (uint8_t j = 0; j < gamePlayVars.numberOfOtherCars; j++) {
 
                 OtherCar &otherCar = otherCars[j];
 
@@ -570,11 +570,11 @@ void draw(bool drawOtherCars) {
     // Serial.println((startVec.getX() + endVec.getX()) / 2);
                     otherCar.setXWorld((startVec.getX() + endVec.getX()) / 2);
                    otherCar.setY(world.roadHeightAt(otherCar.getZ()));
-Serial.print(i);
-Serial.print(" ");
-Serial.print(indexFrom);
-Serial.print(" ");
-Serial.println(i - indexFrom);
+// Serial.print(i);
+// Serial.print(" ");
+// Serial.print(indexFrom);
+// Serial.print(" ");
+// Serial.println(i - indexFrom);
 
     // Serial.print("Render ");
     // Serial.print(otherCar.getX());
