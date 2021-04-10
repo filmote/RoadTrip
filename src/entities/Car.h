@@ -89,7 +89,7 @@ struct Car : public Base {
 
                     break;
 
-                case CarMovement::Deccelerate:
+                case CarMovement::Coast:
     
                     switch (speed) {
 
@@ -105,6 +105,23 @@ struct Car : public Base {
                     }
 
                     break;
+
+                case CarMovement::Deccelerate:
+    
+                    switch (speed) {
+
+                        case 1 ... 1024:
+
+                            this->setSpeed(0);
+                            break;
+
+                        default:
+                            this->setSpeed(this->getSpeed() / 1.4);
+                            break;
+
+                    }
+
+                    break;                    
 
                 case CarMovement::NoMovement:
 

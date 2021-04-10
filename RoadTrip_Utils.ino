@@ -191,15 +191,15 @@ void moveOtherCars(bool collisionAlready) {
 
         // What about into the player?
 
-        if (!collisionAlready) {
+        //if (!collisionAlready) {
 
-            if (abs(car.getX() - otherCarX) < Constants::OtherCarWidthUnits && abs(car.getZ() - (otherCar.getZ() + otherCar.getSpeed_Display())) < Constants::OtherCarLengthUnits ) {
+            if (abs(car.getX() - otherCarX) < Constants::OtherCarWidthUnits && abs((car.getZ() + car.getSpeed_Display()) - (otherCar.getZ() + otherCar.getSpeed_Display())) < Constants::OtherCarLengthUnits ) {
 
                 collide = true;
 
             }
 
-        }
+        //}
 
 
         // If no collision has occurred then move the car forward ..
@@ -239,7 +239,7 @@ void moveOtherCars(bool collisionAlready) {
 
                     }
 
-                    if (misses == 2) {
+                    if (misses == Constants::NumberOfOtherCars - 1) {
 
                         cont = false;
 

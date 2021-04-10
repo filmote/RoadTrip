@@ -267,15 +267,21 @@ void game() {
                 }
                 else {
 
-                    carMovement = CarMovement::Deccelerate;
+                    carMovement = CarMovement::Coast;
 
                 }
 
             }
             else {
 
-                carMovement = CarMovement::Deccelerate;
+                carMovement = CarMovement::Coast;
 
+            }
+
+            if (arduboy.notPressed(A_BUTTON) && arduboy.pressed(B_BUTTON)) {
+
+                carMovement = CarMovement::Deccelerate;
+                
             }
 
             car.changeSpeed(carMovement);
@@ -299,7 +305,7 @@ void game() {
                     car.changeSpeed(CarMovement::NoMovement);
                 }
                 else{
-                    car.changeSpeed(CarMovement::Deccelerate);
+                    car.changeSpeed(CarMovement::Coast);
                 }
 
             }

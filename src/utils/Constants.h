@@ -32,7 +32,7 @@ namespace Constants {
     constexpr uint8_t PlayerCarLengthUnits = 60;
     constexpr uint8_t PlayerCarWidthPX = 37;
     constexpr uint8_t PlayerCarHeightPX = 17;
-    constexpr uint8_t OtherCarWidthUnits = 72;
+    constexpr uint8_t OtherCarWidthUnits = 74;
     constexpr uint8_t OtherCarLengthUnits = 60;
     constexpr uint8_t CollisionTollerance = 60;
 
@@ -127,6 +127,7 @@ enum class MovementType : uint8_t {
 
 enum class CarMovement : uint8_t {
     Accelerate,
+    Coast,
     Deccelerate,
     NoMovement
 };
