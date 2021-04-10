@@ -8,15 +8,18 @@ struct Car : public Base {
 
     private:
 
+        bool isOffroad = false;
         uint8_t gear = 0;
         TransmissionType transmissionType = TransmissionType::Auto;
 
     public:
 
         uint8_t getGear()                                   { return this->gear; }    
+        bool getOffroad()                                   { return this->isOffroad; }    
         TransmissionType getTransmissionType()              { return this->transmissionType; }    
 
         void setGear(uint8_t val)                           { this->gear = val; }    
+        void setOffroad(bool val)                           { this->isOffroad = val; }    
         void setTransmissionType(TransmissionType val)      { this->transmissionType = val; }    
 
         void incGear() {
@@ -106,7 +109,7 @@ struct Car : public Base {
 
                     break;
 
-                case CarMovement::Deccelerate:
+                case CarMovement::Decelerate:
     
                     switch (speed) {
 

@@ -48,6 +48,7 @@ struct GamePlayVars {
     uint16_t days = 1;
     uint16_t timeOfDay = 100;
     uint16_t horizonX = 0;
+    uint8_t numberOfOtherCars = (Constants::NumberOfOtherCars > 2 ? 2 : Constants::NumberOfOtherCars);
 
     uint8_t carsPassed = 0;
     bool gameOver = false;
@@ -71,6 +72,7 @@ struct GamePlayVars {
         this->timeOfDay = 100; //SJH  100
         this->carsPassed = Constants::CarsToPass_Init;
         this->gameOver = false;
+        this->numberOfOtherCars = (Constants::NumberOfOtherCars > 2 ? 2 : Constants::NumberOfOtherCars);
 
     }
 
@@ -126,8 +128,23 @@ struct GamePlayVars {
         }
 
         if (this->timeOfDay == 40) {
+            
             this->days++;
+
+            if (this->days == 3) {
+
+                this->numberOfOtherCars++;
+
+            }
+
+            if (this->days == 7) {
+
+                this->numberOfOtherCars++;
+
+            }
+
             return true;
+
         }
 
         return false;

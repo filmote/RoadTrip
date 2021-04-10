@@ -21,13 +21,13 @@ void game_Init() {
     cameraPos.setY(UPM);
     cameraPos.setZ(-40);
 
-    for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+    for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
         OtherCar &otherCar = otherCars[i];
 
         otherCar.setX(0);
         otherCar.setZ(400 + (i * 145));
-        otherCar.setSpeed(random(4, 8) * Constants::SpeedDiv);
+        otherCar.setSpeed(random(6, 10) * Constants::SpeedDiv);
 
     }
 
@@ -81,15 +81,19 @@ void game() {
 
         case TransmissionType::Auto:
         
-            if (car.getTransmissionType() == TransmissionType::Auto && car.getTacho() == 8 && car.getGear() > 0) {
-
-                car.incGear();
-
-            }
-
-            if (car.getTransmissionType() == TransmissionType::Auto && car.getTacho() == 1 && car.getGear() > 1) {
+            if (car.getTacho() == 1 && car.getGear() > 1) {
 
                 car.decGear();
+
+            }
+            
+            if (!car.getOffroad()) {
+
+                if (car.getTacho() == 8 && car.getGear() > 0) {
+
+                    car.incGear();
+
+                }
 
             }
 
@@ -109,10 +113,10 @@ void game() {
 
     }
 
+
+    // Render screen ..
+
     draw(true);
-
-    // Render details ..
-
     renderPlayerCar();
     renderHud();
     renderDayBanner();
@@ -126,8 +130,8 @@ void game() {
 
     // When moving left or right, the speed must be > 0 .. 
 
-    bool offRoad = false;
     uint8_t speed = car.getSpeed_Display();
+    //uint8_t speedForSteering = 0;
 
 
 
@@ -138,91 +142,97 @@ void game() {
         speed = 2;
 
     }
+    // else {
+
+    //     speedForSteering = speed;
+        
+    // }
 
     #ifndef DEBUG_MOVE_WHILE_STATIONARY
 
-        if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-(speed / 2), 0) == Constants::NoCollision) {
-            cameraPos.setX(cameraPos.getX() - (speed / 2));
-            car.setX(car.getX() - (speed / 2));
-        }
+    if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-(speed / 2), 0) == Constants::NoCollision) {
+        cameraPos.setX(cameraPos.getX() - (speed / 2));
+        car.setX(car.getX() - (speed / 2));
+    }
 
-        if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speed / 2, 0) == Constants::NoCollision) {
-            cameraPos.setX(cameraPos.getX() + (speed / 2));
-            car.setX(car.getX() + (speed / 2));
-        }
+    if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speed / 2, 0) == Constants::NoCollision) {
+        cameraPos.setX(cameraPos.getX() + (speed / 2));
+        car.setX(car.getX() + (speed / 2));
+    }
 
 
-        Vec3 segClosest = world.getRoadSegment(0, car.getZ());
-        Vec3 segNext = world.getRoadSegment(car.getZ(), car.getZ() + UPM);
+    Vec3 segClosest = world.getRoadSegment(0, car.getZ());
+    Vec3 segNext = world.getRoadSegment(car.getZ(), car.getZ() + UPM);
 
-        // Serial.print("Car: ");
-        // Serial.print(        car.getX()   );
-        // Serial.print(", World1: ");
-        // Serial.print(  segClosest.getX()  );
-        // Serial.print(", World2: ");
-        // Serial.print(  segNext.getX()  );
-        //   Serial.print(" = ");     
-        // Serial.println(        car.getX() - ((segClosest.getX() + segNext.getX()) / 2)  );
+    // Serial.print("Car: ");
+    // Serial.print(        car.getX()   );
+    // Serial.print(", World1: ");
+    // Serial.print(  segClosest.getX()  );
+    // Serial.print(", World2: ");
+    // Serial.print(  segNext.getX()  );
+    //   Serial.print(" = ");     
+    // Serial.println(        car.getX() - ((segClosest.getX() + segNext.getX()) / 2)  );
 
-        int16_t carOffsetOnRoad = car.getX() - ((segClosest.getX() + segNext.getX()) / 2);
+    int16_t carOffsetOnRoad = car.getX() - ((segClosest.getX() + segNext.getX()) / 2);
 
-        if (speed > 0 && gamePlayVars.brakeCount == 0) {
+    if (speed > 0 && gamePlayVars.brakeCount == 0) {
 
-            switch (carOffsetOnRoad) {
+        switch (carOffsetOnRoad) {
 
-                case -1000 ... -191:
+            case -1000 ... -191:
 
-                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
-                    gamePlayVars.brakeSide = Direction::Both;
-                    offRoad = true;
+                gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                gamePlayVars.brakeSide = Direction::Both;
+                car.setOffroad(true);
+                break;
 
-                    break;
+            case -190 ... -130:
 
-                case -190 ... -130:
+                gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                gamePlayVars.brakeSide = Direction::Left;
+                car.setOffroad(true);
+                break;
 
-                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
-                    gamePlayVars.brakeSide = Direction::Left;
-                    offRoad = true;
+            case 130 ... 190:
 
-                    break;
+                gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                gamePlayVars.brakeSide = Direction::Right;
+                car.setOffroad(true);
+                break;
 
-                case 130 ... 190:
+            case 191 ... 1000:
 
-                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
-                    gamePlayVars.brakeSide = Direction::Right;
-                    offRoad = true;
+                gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
+                gamePlayVars.brakeSide = Direction::Both;
+                car.setOffroad(true);
+                break;
 
-                    break;
-
-                case 191 ... 1000:
-
-                    gamePlayVars.brakeCount = Constants::BrakeCloud_OffRoad;
-                    gamePlayVars.brakeSide = Direction::Both;
-                    offRoad = true;
-
-                    break;
-
-            }
+            default:
+                car.setOffroad(false);
+                break;
 
         }
+
+    }
 
     #endif
 
     #ifdef DEBUG_MOVE_WHILE_STATIONARY
 
-        if (arduboy.pressed(LEFT_BUTTON)) {
-            moveCar(-2, 0);
-            cameraPos.setX(cameraPos.getX() - 2);
-            car.setX(car.getX() - (speed / 2));
-        }
+    if (arduboy.pressed(LEFT_BUTTON)) {
+        moveCar(-2, 0);
+        cameraPos.setX(cameraPos.getX() - 2);
+        car.setX(car.getX() - (speed / 2));
+    }
 
-        if (arduboy.pressed(RIGHT_BUTTON)) {
-            moveCar(2, 0);
-            cameraPos.setX(cameraPos.getX() + 2);
-            car.setX(car.getX() + (speed / 2));
-        }
+    if (arduboy.pressed(RIGHT_BUTTON)) {
+        moveCar(2, 0);
+        cameraPos.setX(cameraPos.getX() + 2);
+        car.setX(car.getX() + (speed / 2));
+    }
 
     #endif
+
 
     uint8_t collide = Constants::NoCollision;
 
@@ -243,13 +253,12 @@ void game() {
 // Serial.print(", tacho: ");
 // Serial.println(tacho);
 
-            if (!offRoad || car.getGear() == 1) {
+            if (!car.getOffroad() || car.getGear() == 1) {
 
                 if (arduboy.pressed(A_BUTTON) && ((car.getGear() == 1 || tacho > 1) && tacho < 8)) {
 
 
                     // If accelerating from a stand still, render the dirt cloud ..
-
 
                     if (car.getSpeed().getInteger() == 0) {
                         gamePlayVars.brakeCount = Constants::BrakeCloud_Accelerate;
@@ -280,8 +289,8 @@ void game() {
 
             if (arduboy.notPressed(A_BUTTON) && arduboy.pressed(B_BUTTON)) {
 
-                carMovement = CarMovement::Deccelerate;
-
+                carMovement = CarMovement::Decelerate;
+                
             }
 
             car.changeSpeed(carMovement);
@@ -301,7 +310,7 @@ void game() {
             }
             else {
 
-                if (!offRoad) {
+                if (!car.getOffroad()) {
                     car.changeSpeed(CarMovement::NoMovement);
                 }
                 else{
@@ -536,7 +545,8 @@ void draw(bool drawOtherCars) {
 
             // draw other cars ..
 
-            for (uint8_t j = 0; j < Constants::NumberOfOtherCars; j++) {
+
+            for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
                 OtherCar &otherCar = otherCars[j];
 
