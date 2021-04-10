@@ -210,7 +210,7 @@ void moveOtherCars(bool collisionAlready) {
 
             if (otherCar.getZ() < cameraPos.getZ() - Constants::DistToRenewCars) {
 
-                if (gamePlayVars.numberOfOtherCars> 1) {
+                if (gamePlayVars.numberOfOtherCars > 1) {
 
                     for (uint8_t j = 0; j < gamePlayVars.numberOfOtherCars; j++) {
 
@@ -231,8 +231,7 @@ void moveOtherCars(bool collisionAlready) {
                 }
 
                 otherCar.setSpeed(random(9, 14) * Constants::SpeedDiv);
-                otherCar.setSpeed(13 * Constants::SpeedDiv);
-
+                
                 if (gamePlayVars.carsPassed > 0 && !gamePlayVars.gameOver) {
 
                     gamePlayVars.carsPassed--;

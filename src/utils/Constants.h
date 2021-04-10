@@ -18,7 +18,7 @@
 #define SMALLER_SIGNPOSTS
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define _SOUNDS
+#define SOUNDS
 
 #define UPM 64 // int16_ts per meter
 
@@ -66,7 +66,7 @@ namespace Constants {
     constexpr uint8_t PROGMEM GearboxY[] = { 0, 1, 13, 1, 13, 1 };
 
     constexpr uint8_t NewDayBannerDelay = 100;
-    constexpr uint8_t CarsToPass_Init = 15; 
+    constexpr uint8_t CarsToPass_Init = 20; 
     constexpr uint8_t CarsToPass_Increase = 5;
     
     constexpr uint8_t GameOver_MaxOffset = 108;

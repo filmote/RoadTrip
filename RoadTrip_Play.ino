@@ -26,7 +26,7 @@ void game_Init() {
         OtherCar &otherCar = otherCars[i];
 
         otherCar.setX(0);
-        otherCar.setZ(400 + (i * 145));
+        otherCar.setZ(400 + (i * 160));
         otherCar.setSpeed(random(6, 10) * Constants::SpeedDiv);
 
     }
@@ -42,7 +42,6 @@ void game_Init() {
 //  Handle state updates .. 
 //
 void game() {
-
 
     #ifdef SOUNDS
 
