@@ -2,7 +2,7 @@
 
 // - Debug ------------------------------
 
-#define _SAVESPACE
+#define SAVESPACE
 #define _DEBUG_COLLISIONS
 #define _DEBUG_MOVE_WHILE_STATIONARY
 #define _DEBUG_STRAIGHT_ROAD

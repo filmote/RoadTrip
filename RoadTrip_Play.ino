@@ -559,10 +559,12 @@ void draw(bool drawOtherCars) {
     // Serial.print(", xWorld:");
     // Serial.println((startVec.getX() + endVec.getX()) / 2);
                     otherCar.setXWorld((startVec.getX() + endVec.getX()) / 2);
-                    //otherCar.setX((startVec.getX() + endVec.getX()) / 2);
-                    otherCar.setY(world.roadHeightAt(otherCar.getZ() - i));
-                    //otherCar.setZ((startVec.getZ() + endVec.getZ()) / 2);
-                    //otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+                   otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+Serial.print(i);
+Serial.print(" ");
+Serial.print(indexFrom);
+Serial.print(" ");
+Serial.println(i - indexFrom);
 
     // Serial.print("Render ");
     // Serial.print(otherCar.getX());
@@ -579,8 +581,11 @@ void draw(bool drawOtherCars) {
                         // Vec3 worldSeg = otherCar.clone();
                         // worldSeg.setX(otherCar.getXWorld());
                         // Vec3 worldPerspective = world.perspective(worldSeg, cameraPos);
+                        // otherCarNonRef.setY(otherCarNonRef.getY() - (i - indexFrom));
+
 
                         Vec3 carPerspective = world.perspective(otherCarNonRef, cameraPos);
+                        carPerspective.setY(carPerspective.getY() - (i - indexFrom));
                         int16_t distToCar = otherCar.getZ() - cameraPos.getZ();
 
 
