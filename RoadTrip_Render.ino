@@ -316,7 +316,7 @@ void renderDayBanner() {
 
 void renderGameOver() { // 0  to 108
 
-    Sprites::drawPlusMask(WIDTH - gameOverVars.offset, 11, Images::GameOver_00, 0);
-    Sprites::drawPlusMask(-59 + gameOverVars.offset, 35, Images::GameOver_01, 0);
+    Sprites::drawPlusMask(WIDTH - gameOverVars.offset, 13, Images::GameOver_00, 0);
+    Sprites::drawPlusMask(-59 + gameOverVars.offset, 37, Images::GameOver_01, 0);
 
 }

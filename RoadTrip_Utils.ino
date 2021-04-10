@@ -230,6 +230,9 @@ void moveOtherCars(bool collisionAlready) {
 
                 }
 
+                otherCar.setSpeed(random(9, 14) * Constants::SpeedDiv);
+                otherCar.setSpeed(13 * Constants::SpeedDiv);
+
                 if (gamePlayVars.carsPassed > 0 && !gamePlayVars.gameOver) {
 
                     gamePlayVars.carsPassed--;
