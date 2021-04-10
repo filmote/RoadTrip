@@ -392,7 +392,9 @@ void draw(bool drawOtherCars) {
         Vec3 endVec = world.getRoadSegment(i + 1);
 
         startPos = world.perspective(startVec, cameraPos);
+        startPos.setY(startPos.getY() - (((i -1) - indexFrom) ));
         endPos   = world.perspective(endVec, cameraPos);
+        endPos.setY(endPos.getY() - ((i - indexFrom) ));
 
         int16_t x1Bottom = startPos.getX() - startPos.getZ() * 1.25;
         int16_t x2Bottom = x1Bottom + startPos.getZ() * 2.5;
@@ -543,9 +545,10 @@ void draw(bool drawOtherCars) {
 
             // draw other cars ..
 
+
             for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
-                OtherCar &otherCar = otherCars[i];
+                OtherCar &otherCar = otherCars[j];
 
 
                 // If the other car is within the road segment being rendered then render it ..
@@ -566,10 +569,12 @@ void draw(bool drawOtherCars) {
     // Serial.print(", xWorld:");
     // Serial.println((startVec.getX() + endVec.getX()) / 2);
                     otherCar.setXWorld((startVec.getX() + endVec.getX()) / 2);
-                    //otherCar.setX((startVec.getX() + endVec.getX()) / 2);
-                    otherCar.setY(world.roadHeightAt(otherCar.getZ()));
-                    //otherCar.setZ((startVec.getZ() + endVec.getZ()) / 2);
-                    //otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+                   otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+Serial.print(i);
+Serial.print(" ");
+Serial.print(indexFrom);
+Serial.print(" ");
+Serial.println(i - indexFrom);
 
     // Serial.print("Render ");
     // Serial.print(otherCar.getX());
@@ -586,8 +591,11 @@ void draw(bool drawOtherCars) {
                         // Vec3 worldSeg = otherCar.clone();
                         // worldSeg.setX(otherCar.getXWorld());
                         // Vec3 worldPerspective = world.perspective(worldSeg, cameraPos);
+                        // otherCarNonRef.setY(otherCarNonRef.getY() - (i - indexFrom));
+
 
                         Vec3 carPerspective = world.perspective(otherCarNonRef, cameraPos);
+                        carPerspective.setY(carPerspective.getY() - (i - indexFrom));
                         int16_t distToCar = otherCar.getZ() - cameraPos.getZ();
 
 
