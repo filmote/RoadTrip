@@ -18,7 +18,7 @@
 #define SMALLER_SIGNPOSTS
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define SOUNDS
+#define _SOUNDS
 
 #define UPM 64 // int16_ts per meter
 
