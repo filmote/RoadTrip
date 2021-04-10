@@ -31,7 +31,7 @@
 			"taskName": "--verify",
 			"args": ["-v", "${file}"],
 			"isBuildCommand": true,
-			"showOutput": "silent",
+			"showOutput": "always",
 			"problemMatcher": {
 				"owner": "external",
 				"fileLocation": ["relative", "${fileDirname}"],

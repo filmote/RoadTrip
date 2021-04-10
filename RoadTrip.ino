@@ -17,7 +17,7 @@
 
 Arduboy2Ext arduboy;
 
-#ifndef SAVESPACE
+#ifndef DEBUG
 ARDUBOY_NO_USB
 #endif
 

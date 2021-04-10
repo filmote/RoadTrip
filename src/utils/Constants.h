@@ -2,7 +2,7 @@
 
 // - Debug ------------------------------
 
-#define _SAVESPACE
+#define DEBUG
 #define _DEBUG_COLLISIONS
 #define _DEBUG_MOVE_WHILE_STATIONARY
 #define _DEBUG_STRAIGHT_ROAD
@@ -25,7 +25,7 @@
 namespace Constants {
 
     constexpr uint8_t NoCollision = 255;
-    constexpr uint8_t NumberOfOtherCars = 3;
+    constexpr uint8_t NumberOfOtherCars = 4;
     constexpr uint8_t NumberOfCactii = 3;
 
     constexpr uint8_t PlayerCarWidthUnits = 78;
@@ -66,8 +66,8 @@ namespace Constants {
     constexpr uint8_t PROGMEM GearboxY[] = { 0, 1, 13, 1, 13, 1 };
 
     constexpr uint8_t NewDayBannerDelay = 100;
-    constexpr uint8_t CarsToPass_Init = 40; // SJH 40
-    constexpr uint8_t CarsToPass_Increase = 2;
+    constexpr uint8_t CarsToPass_Init = 20; 
+    constexpr uint8_t CarsToPass_Increase = 5;
     
     constexpr uint8_t GameOver_MaxOffset = 108;
     constexpr uint8_t Title_MaxOffset = 120;

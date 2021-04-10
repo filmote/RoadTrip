@@ -21,7 +21,7 @@ void game_Init() {
     cameraPos.setY(UPM);
     cameraPos.setZ(-40);
 
-    for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+    for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
         OtherCar &otherCar = otherCars[i];
 
@@ -128,6 +128,7 @@ void game() {
 
     bool offRoad = false;
     uint8_t speed = car.getSpeed_Display();
+    //uint8_t speedForSteering = 0;
 
 
 
@@ -138,6 +139,11 @@ void game() {
         speed = 2;
 
     }
+    // else {
+
+    //     speedForSteering = speed;
+        
+    // }
 
     #ifndef DEBUG_MOVE_WHILE_STATIONARY
 
@@ -534,7 +540,7 @@ void draw(bool drawOtherCars) {
 
             // draw other cars ..
 
-            for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+            for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
                 OtherCar &otherCar = otherCars[i];
 

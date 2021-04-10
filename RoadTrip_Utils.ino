@@ -30,7 +30,7 @@ uint8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisi
 
     uint8_t collide = Constants::NoCollision;
 
-    for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+    for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
         OtherCar &otherCar = otherCars[i];
 
@@ -152,9 +152,9 @@ void moveOtherCars(bool collisionAlready) {
 
     // Sort the cars ..
 
-    sort(otherCars, Constants::NumberOfOtherCars);
+    sort(otherCars, gamePlayVars.numberOfOtherCars);
 
-    for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+    for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
         bool collide = false;
         OtherCar &otherCar = otherCars[i];
@@ -172,7 +172,7 @@ void moveOtherCars(bool collisionAlready) {
 
         #endif        
 
-        for (uint8_t j = i; j < Constants::NumberOfOtherCars; j++) {
+        for (uint8_t j = i; j < gamePlayVars.numberOfOtherCars; j++) {
 
             if (i != j) {
 
@@ -210,45 +210,25 @@ void moveOtherCars(bool collisionAlready) {
 
             if (otherCar.getZ() < cameraPos.getZ() - Constants::DistToRenewCars) {
 
+                if (gamePlayVars.numberOfOtherCars> 1) {
 
-                // Do not position the car over another!
-
-                int16_t position = cameraPos.getZ() + 800;
-                bool cont = true;
-
-                while (cont) {
-                        
-                    uint8_t misses = 0;
-
-                    for (uint8_t j = 0; j < Constants::NumberOfOtherCars; j++) {
+                    for (uint8_t j = 0; j < gamePlayVars.numberOfOtherCars; j++) {
 
                         if (j != i) {
-                            
-                            if (position > otherCars[j].getZ() - 80 && position < otherCars[j].getZ() + 80) {
 
-                                position = position + 200;
-
-                            }
-                            else {
-
-                                misses++;
-
-                            }
+                            otherCar.setZ(otherCars[j].getZ() + 650);
+                            break;
 
                         }
 
                     }
 
-                    if (misses == Constants::NumberOfOtherCars - 1) {
+                }
+                else {
 
-                        cont = false;
-
-                    }
+                    otherCar.setZ(cameraPos.getZ() + random(700, 1200));
 
                 }
-
-                otherCar.setZ(position);
-                otherCar.setSpeed(random(6, 10) * Constants::SpeedDiv); 
 
                 if (gamePlayVars.carsPassed > 0 && !gamePlayVars.gameOver) {
 
@@ -305,7 +285,7 @@ void houseKeeping() {
         car.decZ();
         world.decZ();
 
-        for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+        for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
             OtherCar &otherCar = otherCars[i];
             otherCar.decZ();
@@ -324,7 +304,7 @@ void houseKeeping() {
 
         // Are cars too far into the distance?
 
-        for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+        for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
 
             OtherCar &otherCar = otherCars[i];
             if (otherCar.getZ() - otherCar.getZ() > 2500) {
