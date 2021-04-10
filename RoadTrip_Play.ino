@@ -281,7 +281,7 @@ void game() {
             if (arduboy.notPressed(A_BUTTON) && arduboy.pressed(B_BUTTON)) {
 
                 carMovement = CarMovement::Deccelerate;
-                
+
             }
 
             car.changeSpeed(carMovement);
@@ -383,7 +383,9 @@ void draw(bool drawOtherCars) {
         Vec3 endVec = world.getRoadSegment(i + 1);
 
         startPos = world.perspective(startVec, cameraPos);
+        startPos.setY(startPos.getY() - (((i -1) - indexFrom) ));
         endPos   = world.perspective(endVec, cameraPos);
+        endPos.setY(endPos.getY() - ((i - indexFrom) ));
 
         int16_t x1Bottom = startPos.getX() - startPos.getZ() * 1.25;
         int16_t x2Bottom = x1Bottom + startPos.getZ() * 2.5;
@@ -534,9 +536,9 @@ void draw(bool drawOtherCars) {
 
             // draw other cars ..
 
-            for (uint8_t i = 0; i < Constants::NumberOfOtherCars; i++) {
+            for (uint8_t j = 0; j < Constants::NumberOfOtherCars; j++) {
 
-                OtherCar &otherCar = otherCars[i];
+                OtherCar &otherCar = otherCars[j];
 
 
                 // If the other car is within the road segment being rendered then render it ..
@@ -558,7 +560,7 @@ void draw(bool drawOtherCars) {
     // Serial.println((startVec.getX() + endVec.getX()) / 2);
                     otherCar.setXWorld((startVec.getX() + endVec.getX()) / 2);
                     //otherCar.setX((startVec.getX() + endVec.getX()) / 2);
-                    otherCar.setY(world.roadHeightAt(otherCar.getZ()));
+                    otherCar.setY(world.roadHeightAt(otherCar.getZ() - i));
                     //otherCar.setZ((startVec.getZ() + endVec.getZ()) / 2);
                     //otherCar.setY(world.roadHeightAt(otherCar.getZ()));
 
