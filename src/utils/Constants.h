@@ -4,7 +4,6 @@
 
 #define _DEBUG
 #define _DEBUG_COLLISIONS
-#define _DEBUG_MOVE_WHILE_STATIONARY
 #define _DEBUG_STRAIGHT_ROAD
 #define _DEBUG_LEVEL_ROAD
 #define _DEBUG_OTHER_CAR_STEER
@@ -18,7 +17,7 @@
 #define SMALLER_SIGNPOSTS
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define _SOUNDS
+#define SOUNDS
 
 #define UPM 64 // int16_ts per meter
 
@@ -87,6 +86,10 @@ namespace Constants {
 
     constexpr uint8_t DoNotEditSlot             = 255;
     constexpr uint8_t MaxNumberOfScores         = 5;
+
+                                       // 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 
+    constexpr uint8_t SpeedSteering[] = {  0,  4,  4,  4,  5,  6,  7,  8,  8,  9,  9, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 14, 14, 14, 15, 15, 15, 15, 15, 15  };
+
 
 }
 

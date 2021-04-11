@@ -333,7 +333,7 @@ void renderLights() {
     if (gamePlayVars.showDayBannerCount > 0) {
 
 
-        Sprites::drawExternalMask(4, 19, Images::Lights, Images::Lights_Mask, 0, 0);
+        Sprites::drawExternalMask(3, 18, Images::Lights, Images::Lights_Mask, 0, 0);
 
         switch (gamePlayVars.showDayBannerCount) {
 

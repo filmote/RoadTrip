@@ -158,7 +158,7 @@ void game() {
     
 
     // When moving left or right, the speed must be > 0 .. 
-
+ 
     uint8_t speed = car.getSpeed_Display();
 
     if (gamePlayVars.showDayBannerCount > 59 && gamePlayVars.days == 1) {
@@ -166,17 +166,17 @@ void game() {
         speed = 0;
 
     }
-    //uint8_t speedForSteering = 0;
+    uint8_t speedForSteering = Constants::SpeedSteering[speed];
 
 
 
     // If automatic, make sure the player can get out of the rough ..
 
-    if (speed == 1 && car.getTransmissionType() == TransmissionType::Auto && car.getGear() != 0) {
+    // if (speed < 4 && car.getTransmissionType() == TransmissionType::Auto && car.getGear() != 0) {
 
-        speed = 4;
+    //     speedForSteering = 4;
 
-    }
+    // }
     // else {
 
     //     speedForSteering = speed;
@@ -185,14 +185,34 @@ void game() {
 
     #ifndef DEBUG_MOVE_WHILE_STATIONARY
 
-    if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-(speed / 2), 0) == Constants::NoCollision) {
-        cameraPos.setX(cameraPos.getX() - (speed / 2));
-        car.setX(car.getX() - (speed / 2));
+    // if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
+    //     cameraPos.setX(cameraPos.getX() - speedForSteering);
+    //     car.setX(car.getX() - speedForSteering);
+    // }
+
+    // if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
+    //     cameraPos.setX(cameraPos.getX() + speedForSteering);
+    //     car.setX(car.getX() + speedForSteering);
+    // }
+
+    if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
+        // Serial.print(car.getX());
+        // Serial.print(" ");
+        // Serial.print(speedForSteering);
+        // Serial.print(" ");
+        cameraPos.setX(cameraPos.getX() - speedForSteering);
+        car.setX(car.getX() - speedForSteering);
+        // Serial.println(car.getX());
     }
 
-    if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speed / 2, 0) == Constants::NoCollision) {
-        cameraPos.setX(cameraPos.getX() + (speed / 2));
-        car.setX(car.getX() + (speed / 2));
+    if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
+        // Serial.print(car.getX());
+        // Serial.print(" ");
+        // Serial.print(speedForSteering);
+        // Serial.print(" ");
+        cameraPos.setX(cameraPos.getX() + speedForSteering);
+        car.setX(car.getX() + speedForSteering);
+        // Serial.println(car.getX());
     }
 
 

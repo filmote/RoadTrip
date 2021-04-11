@@ -92,7 +92,7 @@ uint8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisi
 
             }
 
-            if (zMovement != 0) { // Move left or right ..
+            if (zMovement != 0) { // Move front or back ..
 
                 if (abs(xOverlap) < Constants::CollisionTollerance) {
 
@@ -110,6 +110,8 @@ uint8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisi
                     #ifdef DEBUG_COLLISIONS
                         Serial.println("BLOCK FB");
                     #endif
+
+                    nudgeCarForward(i);
 
                     break;
                     
@@ -387,6 +389,39 @@ void placeCactii() {
 
         cactiiPos.setX(i % 2);
         cactiiPos.setZ(400 + (i * 245));
+
+    }
+
+}
+
+
+void nudgeCarForward(uint8_t carIdx) {
+
+    OtherCar &otherCar = otherCars[carIdx];
+    bool collide = false;
+
+    int16_t otherCarZ = otherCar.getZ() + otherCar.getSpeed_Display() + 1000;
+    int16_t otherCarX = otherCar.getX() + otherCar.getXWorld() + otherCar.getXMovement();
+
+    for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
+
+        if (i != carIdx) {
+
+            OtherCar &testCar = otherCars[i];
+
+            if (abs((testCar.getX() + testCar.getXWorld()) - otherCarX) < Constants::OtherCarWidthUnits && abs(testCar.getZ() - otherCarZ) < Constants::OtherCarLengthUnits ) {
+
+                collide = true;
+
+            }
+
+        }
+
+    }
+
+    if (!collide) {
+
+        otherCar.setZ(otherCar.getZ() + 1000);
 
     }
 
