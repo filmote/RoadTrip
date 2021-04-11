@@ -48,7 +48,7 @@ struct GamePlayVars {
     uint16_t days = 1;
     uint16_t timeOfDay = 100;
     uint16_t horizonX = 0;
-    uint8_t numberOfOtherCars = (Constants::NumberOfOtherCars > 2 ? 2 : Constants::NumberOfOtherCars);
+    uint8_t numberOfOtherCars = 0;
 
     uint8_t carsPassed = 0;
     bool gameOver = false;

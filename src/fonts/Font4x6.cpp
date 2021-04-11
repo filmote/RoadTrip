@@ -4,7 +4,7 @@
 #include "Font4x6.h"
 #include "Font4x6_Bitmaps.h"
 
-#define USE_LOWER_CASE
+#define _USE_LOWER_CASE
 
 #define FONT4x6_WIDTH 4
 #define FONT4x6_HEIGHT 7

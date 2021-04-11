@@ -56,7 +56,7 @@ void renderHighScore(HighScore &highScore) {
             extractDigits(digits, slot.getScore());
 
             for (uint8_t i = 0, x2 = xOffset + 54; i < 6; ++i, x2 -= 5) {
-                Sprites::drawOverwrite(x2, yOffset, font_images, (digits[i] + 52));
+                Sprites::drawOverwrite(x2, yOffset, font_images, (digits[i] + 26));
             }
 
         }
