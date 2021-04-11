@@ -143,12 +143,12 @@ void game() {
     renderPlayerCar();
     renderHud();
 
-    if (gamePlayVars.days > 1) {
+    //if (gamePlayVars.days > 1) {
         renderDayBanner();
-    }
-    else {
-        renderLights();
-    }
+    //}
+    //else {
+    //    renderLights();
+    //}
     
 
     // Do some house keeping ..

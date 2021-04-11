@@ -7,7 +7,6 @@
 #include "src/entities/Entities.h"
 #include "src/utils/EEPROM_Utils.h"
 #include "src/images/Images.h"
-#include "src/fonts/Font4x6.h"
 #include <FixedPointsCommon.h>
 
 #ifdef SOUNDS
@@ -31,7 +30,6 @@ Car car;
 OtherCar otherCars[Constants::NumberOfOtherCars];
 World world;
 GameState gameState = GameState::Splash_Init;
-Font4x6 font4x6 = Font4x6(6);
 HighScore highScore;
 
 

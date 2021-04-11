@@ -304,11 +304,16 @@ void renderDayBanner() {
 
         }
 
-        font4x6.setCursor(x, 17);
-        font4x6.setTextColor(WHITE);
-        font4x6.print("DAY");
-        font4x6.setCursor(x + 18, 17);
-        font4x6.print(gamePlayVars.days);
+        Sprites::drawOverwrite(x, 18, Images::Day, 0);
+        x = x + 18;
+
+        {
+            uint8_t newDay = gamePlayVars.days;
+            if (newDay > 100)  { Sprites::drawOverwrite(x, 18, Font4x6, ((newDay / 100) + 26));  newDay = newDay - ((newDay / 100) * 100); x = x + 5; }
+            if (newDay > 10)   { Sprites::drawOverwrite(x, 18, Font4x6, ((newDay / 10) + 26));  newDay = newDay % 10; x = x + 5; }
+            Sprites::drawOverwrite(x, 18, Font4x6, newDay + 26);
+
+        }
 
     }
 
