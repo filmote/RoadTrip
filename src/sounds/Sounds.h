@@ -22,6 +22,14 @@ namespace Sounds {
         TONES_END
     };
 
+    const uint16_t Lights_Short[] PROGMEM = {
+        NOTE_F5, 60, TONES_END
+    };
+
+    const uint16_t Lights_Long[] PROGMEM = {
+        NOTE_F5, 300, TONES_END
+    };
+ 
     const uint16_t Crash[] PROGMEM = {
         NOTE_C0, 45, NOTE_B1, 15, NOTE_F0, 25, NOTE_C2, 5, NOTE_F0, 15, NOTE_E1, 45, NOTE_F0, 15, TONES_END 
     };

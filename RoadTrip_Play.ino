@@ -59,7 +59,19 @@ void game() {
 
             if (arduboy.justPressed(UP_BUTTON)) {
 
-                car.incGear();
+                if (gamePlayVars.showDayBannerCount < 59 || gamePlayVars.days > 1) {
+                    car.incGear();
+                }
+                else {
+
+                    if (gamePlayVars.brakeCount == 0) {
+
+                        gamePlayVars.brakeCount = Constants::BrakeCloud_DownGear;
+                        gamePlayVars.brakeSide = Direction::Both;
+
+                    }
+
+                }
 
             }
 
@@ -90,7 +102,19 @@ void game() {
 
                 if (car.getTacho() == 8 && car.getGear() > 0) {
 
-                    car.incGear();
+                    if (gamePlayVars.showDayBannerCount < 59 || gamePlayVars.days > 1) {
+                        car.incGear();
+                    }
+                    else {
+
+                        if (gamePlayVars.brakeCount == 0) {
+
+                            gamePlayVars.brakeCount = Constants::BrakeCloud_DownGear;
+                            gamePlayVars.brakeSide = Direction::Both;
+
+                        }
+
+                    }
 
                 }
 
@@ -118,7 +142,13 @@ void game() {
     draw(true);
     renderPlayerCar();
     renderHud();
-    renderDayBanner();
+
+    if (gamePlayVars.days > 1) {
+        renderDayBanner();
+    }
+    else {
+        renderLights();
+    }
     
 
     // Do some house keeping ..
@@ -130,6 +160,12 @@ void game() {
     // When moving left or right, the speed must be > 0 .. 
 
     uint8_t speed = car.getSpeed_Display();
+
+    if (gamePlayVars.showDayBannerCount > 59 && gamePlayVars.days == 1) {
+
+        speed = 0;
+
+    }
     //uint8_t speedForSteering = 0;
 
 
@@ -138,7 +174,7 @@ void game() {
 
     if (speed == 1 && car.getTransmissionType() == TransmissionType::Auto && car.getGear() != 0) {
 
-        speed = 2;
+        speed = 4;
 
     }
     // else {
@@ -262,7 +298,7 @@ void game() {
                     if (car.getSpeed().getInteger() == 0) {
                         gamePlayVars.brakeCount = Constants::BrakeCloud_Accelerate;
                         gamePlayVars.brakeSide = Direction::Both;       
-                        gamePlayVars.showDayBannerCount = 0;             
+                        //gamePlayVars.showDayBannerCount = 0;             
                     }
 
                     carMovement = CarMovement::Accelerate;
@@ -350,15 +386,19 @@ void game() {
 
     // Now, after adjusting the car's speed for collisions, move the car forward ..
 
-    if (gamePlayVars.showDayBannerCount == 0 || gamePlayVars.days > 1) {
+    if ((gamePlayVars.showDayBannerCount < 59 && gamePlayVars.days == 1) || gamePlayVars.days > 1) {
 
-        speed = car.getSpeed_Display();
+        //if (gamePlayVars.showDayBannerCount == 0 || gamePlayVars.days > 1) {
 
-        car.setZ(car.getZ() + speed);
-        cameraPos.setZ(cameraPos.getZ() + speed);
-        cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
+            speed = car.getSpeed_Display();
 
-        moveOtherCars(collide != Constants::NoCollision);
+            car.setZ(car.getZ() + speed);
+            cameraPos.setZ(cameraPos.getZ() + speed);
+            cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
+
+            moveOtherCars(collide != Constants::NoCollision);
+
+        //}
 
     }
 
