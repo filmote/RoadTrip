@@ -389,8 +389,8 @@ void renderLights() {
 
 void renderLights_Shown(uint8_t lights) {
 
-    if (lights >= 7)    arduboy.fillRect(11, 36, 3, 3, WHITE);
-    if (lights >= 3)    arduboy.fillRect(11, 30, 3, 3, WHITE);
-    if (lights >= 1)    arduboy.fillRect(11, 24, 3, 3, WHITE); 
+    if (lights == 7)    arduboy.fillRect(11, 36, 3, 3, WHITE);
+    if (lights == 3)    arduboy.fillRect(11, 30, 3, 3, WHITE);
+    if (lights == 1)    arduboy.fillRect(11, 24, 3, 3, WHITE); 
 
 }
