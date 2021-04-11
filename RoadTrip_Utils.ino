@@ -381,9 +381,9 @@ void moveCactii() {
 
 void placeCactii() {
 
-    for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
+    for (uint8_t i = 1; i <= Constants::NumberOfCactii; i++) {
 
-        Vec3 &cactiiPos = cactii[i];
+        Vec3 &cactiiPos = cactii[i - 1];
 
         cactiiPos.setX(i % 2);
         cactiiPos.setZ(400 + (i * 245));

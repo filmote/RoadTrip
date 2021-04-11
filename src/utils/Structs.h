@@ -47,7 +47,7 @@ struct GamePlayVars {
     uint8_t showDayBannerCount = Constants::NewDayBannerDelay_CountDown;
     uint16_t days = 1;
     uint16_t timeOfDay = 100;
-    uint16_t horizonX = 0;
+    uint16_t horizonX = 64;
     uint8_t numberOfOtherCars = 0;
 
     uint8_t carsPassed = 0;

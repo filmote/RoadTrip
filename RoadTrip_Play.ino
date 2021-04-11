@@ -449,7 +449,7 @@ void draw(bool drawOtherCars) {
         if (i == indexTo) {
 
             Vec3 frontMost = world.getRoadSegment(indexFrom);
-            gamePlayVars.horizonX = frontMost.getX() / 4;
+            gamePlayVars.horizonX = 64 + frontMost.getX() / 4;
 
             uint8_t height = (gamePlayVars.getTimeOfDay() == TimeOfDay::Night ? 14 : 9);
             uint8_t idx = static_cast<uint8_t>(gamePlayVars.getTimeOfDay());

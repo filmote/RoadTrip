@@ -333,7 +333,7 @@ void renderLights() {
     if (gamePlayVars.showDayBannerCount > 0) {
 
 
-        Sprites::drawExternalMask(4, 18, Images::Lights, Images::Lights_Mask, 0, 0);
+        Sprites::drawExternalMask(4, 19, Images::Lights, Images::Lights_Mask, 0, 0);
 
         switch (gamePlayVars.showDayBannerCount) {
 
@@ -389,8 +389,8 @@ void renderLights() {
 
 void renderLights_Shown(uint8_t lights) {
 
-    if (lights >= 7)    arduboy.fillRect(11, 35, 3, 3, WHITE);
-    if (lights >= 3)    arduboy.fillRect(11, 29, 3, 3, WHITE);
-    if (lights >= 1)    arduboy.fillRect(11, 23, 3, 3, WHITE); 
+    if (lights >= 7)    arduboy.fillRect(11, 36, 3, 3, WHITE);
+    if (lights >= 3)    arduboy.fillRect(11, 30, 3, 3, WHITE);
+    if (lights >= 1)    arduboy.fillRect(11, 24, 3, 3, WHITE); 
 
 }
