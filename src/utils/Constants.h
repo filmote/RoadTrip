@@ -36,7 +36,7 @@ namespace Constants {
     constexpr uint8_t OtherCarLengthUnits = 60;
     constexpr uint8_t CollisionTollerance = 60;
 
-    constexpr uint16_t SpeedDiv = 2800;//3000;
+    constexpr uint16_t SpeedDiv = 1800;//3000;
     constexpr uint16_t ZReduction = 8192;
     constexpr int16_t ZMax = 8192 + 2048;
     constexpr uint8_t DistToRenewCars = 50;
@@ -66,6 +66,7 @@ namespace Constants {
     constexpr uint8_t PROGMEM GearboxY[] = { 0, 1, 13, 1, 13, 1 };
 
     constexpr uint8_t NewDayBannerDelay = 100;
+    constexpr uint8_t NewDayBannerDelay_CountDown = 180;
     constexpr uint8_t CarsToPass_Init = 20; 
     constexpr uint8_t CarsToPass_Increase = 5;
     

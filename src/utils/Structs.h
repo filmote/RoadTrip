@@ -44,7 +44,7 @@ struct GamePlayVars {
     uint16_t distance = 0;
     uint16_t oldIndexTo = 0;
     uint16_t previousZ = 0;
-    uint8_t showDayBannerCount = Constants::NewDayBannerDelay;
+    uint8_t showDayBannerCount = Constants::NewDayBannerDelay_CountDown;
     uint16_t days = 1;
     uint16_t timeOfDay = 100;
     uint16_t horizonX = 0;
@@ -65,7 +65,7 @@ struct GamePlayVars {
         this->carsPassed = 0;
         this->oldIndexTo = 0;
         this->previousZ = 0;
-        this->showDayBannerCount = Constants::NewDayBannerDelay;
+        this->showDayBannerCount = Constants::NewDayBannerDelay_CountDown;
         this->days = 1;
         this->brakeCount = 0;
         this->brakeSide = Direction::None;

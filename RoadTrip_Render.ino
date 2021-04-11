@@ -320,3 +320,72 @@ void renderGameOver() { // 0  to 108
     Sprites::drawPlusMask(-59 + gameOverVars.offset, 37, Images::GameOver_01, 0);
 
 }
+
+void renderLights() {
+
+    uint8_t x = 0;
+
+    if (gamePlayVars.showDayBannerCount > 0) {
+
+
+        Sprites::drawExternalMask(4, 18, Images::Lights, Images::Lights_Mask, 0, 0);
+
+        switch (gamePlayVars.showDayBannerCount) {
+
+            case 0 ... 19:
+                arduboy.fillRect(11, 35, 3, 3, WHITE);
+                arduboy.fillRect(11, 29, 3, 3, WHITE);
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                arduboy.setRGBled(0, 0, 0);
+                break;
+
+            case 20 ... 59:
+                arduboy.fillRect(11, 35, 3, 3, WHITE);
+                arduboy.fillRect(11, 29, 3, 3, WHITE);
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                break;
+
+            case 60:
+                arduboy.fillRect(11, 35, 3, 3, WHITE);
+                arduboy.fillRect(11, 29, 3, 3, WHITE);
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                arduboy.setRGBled(0, 32, 0);
+                #ifdef SOUNDS
+                    if (!sound.playing()) sound.tones(Sounds::Lights_Long);
+                #endif
+                break;
+
+            case 61 ... 99:
+                arduboy.fillRect(11, 29, 3, 3, WHITE);
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                break;
+
+            case 100:
+                arduboy.fillRect(11, 29, 3, 3, WHITE);
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                arduboy.setRGBled(32, 0, 32);
+                #ifdef SOUNDS
+                    if (!sound.playing()) sound.tones(Sounds::Lights_Short);
+                #endif
+                break;
+
+            case 101 ... 139:
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                break;
+
+            case 140:
+                arduboy.fillRect(11, 23, 3, 3, WHITE);
+                arduboy.setRGBled(32, 0, 0);
+                #ifdef SOUNDS
+                    if (!sound.playing()) sound.tones(Sounds::Lights_Short);
+                #endif
+                break;
+
+            case 141 ... 180:
+                break;
+
+        }
+
+    }
+
+}

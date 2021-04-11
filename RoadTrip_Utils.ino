@@ -356,9 +356,9 @@ void houseKeeping() {
 
     // Decrease banner counter ..
 
-    if (gamePlayVars.days > 1) {
+    //if (gamePlayVars.days > 1) {
         gamePlayVars.decShowDayBannerCount();
-    }
+    //}
 
 }
 
