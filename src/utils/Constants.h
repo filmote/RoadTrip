@@ -12,6 +12,7 @@
 // --------------------------------------
 
 #define ROCKS
+#define CACTII
 #define _SIGNPOSTS
 #define _LARGER_SIGNPOSTS
 #define SMALLER_SIGNPOSTS

@@ -31,7 +31,9 @@ void game_Init() {
 
     }
 
-    placeCactii();
+    #ifdef CACTII
+        placeCactii();
+    #endif
 
     gameState = GameState::Game;
 
@@ -154,7 +156,10 @@ void game() {
     // Do some house keeping ..
 
     houseKeeping();
-    moveCactii();
+
+    #ifdef CACTII
+        moveCactii();
+    #endif
     
 
     // When moving left or right, the speed must be > 0 .. 
@@ -665,48 +670,52 @@ void draw(bool drawOtherCars) {
 
         // Draw Cactii
 
-        for (uint8_t j = 0; j < Constants::NumberOfCactii; j++) {
+        #ifdef CACTII
 
-            Vec3 &cactiiPos = cactii[j];
+            for (uint8_t j = 0; j < Constants::NumberOfCactii; j++) {
 
-            if (cactiiPos.getZ() > startVec.getZ() && cactiiPos.getZ() <= endVec.getZ()) {
+                Vec3 &cactiiPos = cactii[j];
 
-                uint8_t cactiiIdx = 0;
+                if (cactiiPos.getZ() > startVec.getZ() && cactiiPos.getZ() <= endVec.getZ()) {
 
-                if (i > indexFrom + 2 && i < indexFrom + 4) {
-                    cactiiIdx = 4;
-                }
+                    uint8_t cactiiIdx = 0;
 
-                if (i >= indexFrom + 4 && i < indexFrom + 6) {
-                    cactiiIdx = 3;
-                }
+                    if (i > indexFrom + 2 && i < indexFrom + 4) {
+                        cactiiIdx = 4;
+                    }
 
-                if (i >= indexFrom + 6 && i < indexFrom + 8) {
-                    cactiiIdx = 2;
-                }
+                    if (i >= indexFrom + 4 && i < indexFrom + 6) {
+                        cactiiIdx = 3;
+                    }
 
-                if (i >= indexFrom + 8 && i < indexFrom + 10) {
-                    cactiiIdx = 1;
-                }
+                    if (i >= indexFrom + 6 && i < indexFrom + 8) {
+                        cactiiIdx = 2;
+                    }
 
-                if (i >= indexFrom + 10) {
-                    cactiiIdx = 0;
-                }
+                    if (i >= indexFrom + 8 && i < indexFrom + 10) {
+                        cactiiIdx = 1;
+                    }
 
-                if (cactiiPos.getX() == 0) {
+                    if (i >= indexFrom + 10) {
+                        cactiiIdx = 0;
+                    }
 
-                    Sprites::drawPlusMask(x1Bottom - 12 - (pgm_read_byte(&Images::Cactii_Width[cactiiIdx]) / 2), startPos.getY() - pgm_read_byte(&Images::Cactii_Height[cactiiIdx]), Images::Cactii[cactiiIdx], 0);
+                    if (cactiiPos.getX() == 0) {
 
-                }
-                else {
+                        Sprites::drawPlusMask(x1Bottom - 12 - (pgm_read_byte(&Images::Cactii_Width[cactiiIdx]) / 2), startPos.getY() - pgm_read_byte(&Images::Cactii_Height[cactiiIdx]), Images::Cactii[cactiiIdx], 0);
 
-                    Sprites::drawPlusMask(x2Bottom + 13 - (pgm_read_byte(&Images::Cactii_Width[cactiiIdx]) / 2), startPos.getY() - pgm_read_byte(&Images::Cactii_Height[cactiiIdx]), Images::Cactii[cactiiIdx], 0);
+                    }
+                    else {
+
+                        Sprites::drawPlusMask(x2Bottom + 13 - (pgm_read_byte(&Images::Cactii_Width[cactiiIdx]) / 2), startPos.getY() - pgm_read_byte(&Images::Cactii_Height[cactiiIdx]), Images::Cactii[cactiiIdx], 0);
+
+                    }
 
                 }
 
             }
 
-        }
+        #endif
 
 
         // Sign posts / rocks ..

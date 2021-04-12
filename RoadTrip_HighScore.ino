@@ -17,7 +17,9 @@ void HighScore_Init() {
     //gamePlayVars.timeOfDay = 1700;
     gameState = GameState::HighScore;
 
-    placeCactii();
+    #ifdef CACTII
+        placeCactii();
+    #endif
     
 }   
 
@@ -170,7 +172,10 @@ void renderHighScore(HighScore &highScore) {
 
 
     houseKeeping();
-    moveCactii();
+
+    #ifdef CACTII
+        moveCactii();
+    #endif
     
     cameraPos.setZ(cameraPos.getZ() + 6);
     cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);

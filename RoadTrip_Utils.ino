@@ -301,12 +301,16 @@ void houseKeeping() {
 
         }
 
-        for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
+        #ifdef CACTII
 
-            Vec3 &cactusPos = cactii[i];
-            cactusPos.decZ();
+            for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
 
-        }
+                Vec3 &cactusPos = cactii[i];
+                cactusPos.decZ();
+
+            }
+
+        #endif
 
     }
     else {
@@ -369,36 +373,39 @@ void houseKeeping() {
 
 }
 
-void moveCactii() {
+#ifdef CACTII
 
-    // Move cactii
+    void moveCactii() {
 
-    for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
+        // Move cactii
 
-        Vec3 &cactiiPos = cactii[i];
+        for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
 
-        if (cactiiPos.getZ() < cameraPos.getZ() - Constants::DistToRenewCars) {
-            cactiiPos.setZ(cameraPos.getZ() + random(600, 900));
-            cactiiPos.setX(random(0,2));
+            Vec3 &cactiiPos = cactii[i];
+
+            if (cactiiPos.getZ() < cameraPos.getZ() - Constants::DistToRenewCars) {
+                cactiiPos.setZ(cameraPos.getZ() + random(600, 900));
+                cactiiPos.setX(random(0,2));
+            }
+
         }
 
     }
 
-}
+    void placeCactii() {
 
-void placeCactii() {
+        for (uint8_t i = 1; i <= Constants::NumberOfCactii; i++) {
 
-    for (uint8_t i = 1; i <= Constants::NumberOfCactii; i++) {
+            Vec3 &cactiiPos = cactii[i - 1];
 
-        Vec3 &cactiiPos = cactii[i - 1];
+            cactiiPos.setX(i % 2);
+            cactiiPos.setZ(400 + (i * 245));
 
-        cactiiPos.setX(i % 2);
-        cactiiPos.setZ(400 + (i * 245));
+        }
 
     }
 
-}
-
+#endif
 
 bool nudgeCarForward(uint8_t carIdx) {
 

@@ -25,7 +25,11 @@ ArduboyTones sound(arduboy.audio.enabled);
 #endif
 
 Vec3 cameraPos;
+
+#ifdef CACTII
 Vec3 cactii[Constants::NumberOfCactii];
+#endif
+
 Car car;
 OtherCar otherCars[Constants::NumberOfOtherCars];
 World world;
