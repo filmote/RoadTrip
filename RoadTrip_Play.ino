@@ -26,8 +26,8 @@ void game_Init() {
         OtherCar &otherCar = otherCars[i];
 
         otherCar.setX(0);
-        otherCar.setZ(400 + (i * 160));
-        otherCar.setSpeed(random(6, 10) * Constants::SpeedDiv);
+        otherCar.setZ(400 + (i * 200));
+        otherCar.setSpeed(random(7, 10) * Constants::SpeedDiv);
 
     }
 
@@ -165,68 +165,25 @@ void game() {
 
         speed = 0;
 
+
     }
     uint8_t speedForSteering = Constants::SpeedSteering[speed];
 
 
-
-    // If automatic, make sure the player can get out of the rough ..
-
-    // if (speed < 4 && car.getTransmissionType() == TransmissionType::Auto && car.getGear() != 0) {
-
-    //     speedForSteering = 4;
-
-    // }
-    // else {
-
-    //     speedForSteering = speed;
-        
-    // }
-
     #ifndef DEBUG_MOVE_WHILE_STATIONARY
 
-    // if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
-    //     cameraPos.setX(cameraPos.getX() - speedForSteering);
-    //     car.setX(car.getX() - speedForSteering);
-    // }
-
-    // if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
-    //     cameraPos.setX(cameraPos.getX() + speedForSteering);
-    //     car.setX(car.getX() + speedForSteering);
-    // }
-
     if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
-        // Serial.print(car.getX());
-        // Serial.print(" ");
-        // Serial.print(speedForSteering);
-        // Serial.print(" ");
         cameraPos.setX(cameraPos.getX() - speedForSteering);
         car.setX(car.getX() - speedForSteering);
-        // Serial.println(car.getX());
     }
 
     if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
-        // Serial.print(car.getX());
-        // Serial.print(" ");
-        // Serial.print(speedForSteering);
-        // Serial.print(" ");
         cameraPos.setX(cameraPos.getX() + speedForSteering);
         car.setX(car.getX() + speedForSteering);
-        // Serial.println(car.getX());
     }
-
 
     Vec3 segClosest = world.getRoadSegment(0, car.getZ());
     Vec3 segNext = world.getRoadSegment(car.getZ(), car.getZ() + UPM);
-
-    // Serial.print("Car: ");
-    // Serial.print(        car.getX()   );
-    // Serial.print(", World1: ");
-    // Serial.print(  segClosest.getX()  );
-    // Serial.print(", World2: ");
-    // Serial.print(  segNext.getX()  );
-    //   Serial.print(" = ");     
-    // Serial.println(        car.getX() - ((segClosest.getX() + segNext.getX()) / 2)  );
 
     int16_t carOffsetOnRoad = car.getX() - ((segClosest.getX() + segNext.getX()) / 2);
 
@@ -289,24 +246,17 @@ void game() {
     #endif
 
 
-    uint8_t collide = Constants::NoCollision;
+    int8_t collide = Constants::NoCollision;
 
     if (arduboy.isFrameCount(4)) {
 
-
         uint16_t tacho = car.getTacho();
-
-        //if (tacho == 8) speed = 0;
 
         collide = moveCar(0, speed);
 
         CarMovement carMovement = CarMovement::NoMovement;
 
         if (collide == Constants::NoCollision) {
-// Serial.print("Gear: ");
-// Serial.print(car.getGear());
-// Serial.print(", tacho: ");
-// Serial.println(tacho);
 
             if (!car.getOffroad() || car.getGear() == 1) {
 
@@ -318,7 +268,6 @@ void game() {
                     if (car.getSpeed().getInteger() == 0) {
                         gamePlayVars.brakeCount = Constants::BrakeCloud_Accelerate;
                         gamePlayVars.brakeSide = Direction::Both;       
-                        //gamePlayVars.showDayBannerCount = 0;             
                     }
 
                     carMovement = CarMovement::Accelerate;
@@ -353,23 +302,28 @@ void game() {
         }
         else {
 
-            OtherCar &otherCar = otherCars[collide];
+            if (collide >= 0) {
 
-            if (arduboy.pressed(A_BUTTON)) {
-                car.setSpeed(otherCar.getSpeed());
-                otherCar.setZ(car.getZ() + Constants::PlayerCarLengthUnits);
+                OtherCar &otherCar = otherCars[collide];
 
-                #ifdef DEBUG_COLLISIONS
-                    Serial.println("set speed 1");
-                #endif
-            }
-            else {
+                if (arduboy.pressed(A_BUTTON)) {
 
-                if (!car.getOffroad()) {
-                    car.changeSpeed(CarMovement::NoMovement);
+                    car.setSpeed(otherCar.getSpeed());
+                    otherCar.setZ(car.getZ() + Constants::PlayerCarLengthUnits);
+
+                    #ifdef DEBUG_COLLISIONS
+                        Serial.println("set speed 1");
+                    #endif
                 }
-                else{
-                    car.changeSpeed(CarMovement::Coast);
+                else {
+
+                    if (!car.getOffroad()) {
+                        car.changeSpeed(CarMovement::NoMovement);
+                    }
+                    else{
+                        car.changeSpeed(CarMovement::Coast);
+                    }
+
                 }
 
             }
@@ -379,49 +333,48 @@ void game() {
     }
     else {
 
-
         collide = moveCar(0, speed);
 
-        //CarMovement carMovement = CarMovement::NoMovement;
-
         if (collide != Constants::NoCollision) {
+                    
+                OtherCar &otherCar = otherCars[abs(collide)];
 
-            OtherCar &otherCar = otherCars[collide];
+                if (otherCar.getZ() > car.getZ()) {
 
-            if (otherCar.getZ() > car.getZ()) {
-                car.setSpeed(otherCar.getSpeed());
-                otherCar.setZ(car.getZ() + Constants::PlayerCarLengthUnits);
-                #ifdef DEBUG_COLLISIONS
-                    Serial.println("set speed 2");
-                #endif
+                    car.setSpeed(otherCar.getSpeed());
 
-            }
+
+                    if (collide >= 0) {
+
+                        otherCar.setZ(car.getZ() + Constants::PlayerCarLengthUnits);
+                        #ifdef DEBUG_COLLISIONS
+                            Serial.println("set speed 2");
+                        #endif
+
+                    }
+
+                }
+
+            
 
         }
 
     }
     
 
-
-
     // Now, after adjusting the car's speed for collisions, move the car forward ..
 
     if ((gamePlayVars.showDayBannerCount < 59 && gamePlayVars.days == 1) || gamePlayVars.days > 1) {
 
-        //if (gamePlayVars.showDayBannerCount == 0 || gamePlayVars.days > 1) {
+        speed = car.getSpeed_Display();
 
-            speed = car.getSpeed_Display();
+        car.setZ(car.getZ() + speed);
+        cameraPos.setZ(cameraPos.getZ() + speed);
+        cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
 
-            car.setZ(car.getZ() + speed);
-            cameraPos.setZ(cameraPos.getZ() + speed);
-            cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
-
-            moveOtherCars(collide != Constants::NoCollision);
-
-        //}
+        moveOtherCars(collide != Constants::NoCollision);
 
     }
-
 
 }
 
@@ -623,35 +576,14 @@ void draw(bool drawOtherCars) {
                     
                     // Add the average road segement x value to the car ..
 
-    // Serial.print("otherCar x:");
-    // Serial.print(otherCar.getX());
-    // Serial.print(", xWorld:");
-    // Serial.println((startVec.getX() + endVec.getX()) / 2);
                     otherCar.setXWorld((startVec.getX() + endVec.getX()) / 2);
-                   otherCar.setY(world.roadHeightAt(otherCar.getZ()));
-// Serial.print(i);
-// Serial.print(" ");
-// Serial.print(indexFrom);
-// Serial.print(" ");
-// Serial.println(i - indexFrom);
-
-    // Serial.print("Render ");
-    // Serial.print(otherCar.getX());
-    // Serial.print(",");
-    // Serial.print(startVec.getX());
-    // Serial.print(",");
-    // Serial.println(endVec.getX());
+                    otherCar.setY(world.roadHeightAt(otherCar.getZ()));
 
 
                     #ifndef DEBUG_COLLISIONS
 
                         Vec3 otherCarNonRef = otherCar.clone();
                         otherCarNonRef.setX(otherCar.getX() + otherCar.getXWorld());
-                        // Vec3 worldSeg = otherCar.clone();
-                        // worldSeg.setX(otherCar.getXWorld());
-                        // Vec3 worldPerspective = world.perspective(worldSeg, cameraPos);
-                        // otherCarNonRef.setY(otherCarNonRef.getY() - (i - indexFrom));
-
 
                         Vec3 carPerspective = world.perspective(otherCarNonRef, cameraPos);
                         carPerspective.setY(carPerspective.getY() - (i - indexFrom));

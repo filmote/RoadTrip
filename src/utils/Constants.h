@@ -23,7 +23,7 @@
 
 namespace Constants {
 
-    constexpr uint8_t NoCollision = 255;
+    constexpr uint8_t NoCollision = 127;
     constexpr uint8_t NumberOfOtherCars = 4;
     constexpr uint8_t NumberOfCactii = 3;
 
@@ -71,6 +71,8 @@ namespace Constants {
     
     constexpr uint8_t GameOver_MaxOffset = 108;
     constexpr uint8_t Title_MaxOffset = 120;
+    constexpr uint8_t NudgeDistance = 15;
+    
 
 
     // Sky brightness ..
