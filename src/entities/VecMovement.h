@@ -43,14 +43,6 @@ struct VecMovement {
                 case Direction::Left:
                     {
                         uint8_t x = Curves::Roads::Horizontal::Data[this->curveIdx][this->count - 1];
-                        // if (x > 8) {
-                        //     Serial.print("VEC x = ");
-                        //     Serial.println(x);
-                        //     Serial.print(">8 ");
-                        //     Serial.print(this->curveIdx);
-                        //     Serial.print(", ");
-                        //     Serial.println(this->count);
-                        // }
                         return x * UPM / 4;
                     }
                     break;
@@ -58,14 +50,6 @@ struct VecMovement {
                 case Direction::Up:
                     {
                         uint8_t x = Curves::Roads::Vertical::Data[this->curveIdx][this->count - 1];
-                        // if (x > 8) {
-                        //     Serial.print("VEC x = ");
-                        //     Serial.println(x);
-                        //     Serial.print(">8 ");
-                        //     Serial.print(this->curveIdx);
-                        //     Serial.print(", ");
-                        //     Serial.println(this->count);
-                        // }
                         return x * UPM / 4;
                     }
                     break;
@@ -73,14 +57,6 @@ struct VecMovement {
                 case Direction::Right:
                     {
                         uint8_t x = Curves::Roads::Horizontal::Data[this->curveIdx][this->count - 1];
-                        // if (x > 8) {
-                        //     Serial.print("VEC x = ");
-                        //     Serial.println(x);
-                        //     Serial.print(">8 ");
-                        //     Serial.print(this->curveIdx);
-                        //     Serial.print(", ");
-                        //     Serial.println(this->count);
-                        // }
                         return -x * UPM / 4;
                     }
                     break;
@@ -88,14 +64,6 @@ struct VecMovement {
                 case Direction::Down:
                     {
                         uint8_t x = Curves::Roads::Vertical::Data[this->curveIdx][this->count - 1];
-                        // if (x > 8) {
-                        //     Serial.print("VEC x = ");
-                        //     Serial.println(x);
-                        //     Serial.print(">8 ");
-                        //     Serial.print(this->curveIdx);
-                        //     Serial.print(", ");
-                        //     Serial.println(this->count);
-                        // }
                         return -x * UPM / 4;
                     }
                     break;

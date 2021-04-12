@@ -28,41 +28,16 @@ struct OtherCar : public Base {
             switch (this->direction) {
 
                 case Direction::Left:
-                    // { 
-                    //     uint8_t val = Curves::OtherCars::Data[this->curveIdx][this->count];
-
-                    //     if (val > 10) {
-                    //         Serial.print("Other Car, ci:");
-                    //         Serial.print(this->curveIdx);
-                    //         Serial.print(", count:");
-                    //         Serial.print(this->count);
-                    //         Serial.print(", val:");
-                    //         Serial.println(val);
-                    //     }
-                    // }
 
                     #ifndef DEBUG_OTHER_CAR_STEER
-//                    this->setX(-Curves::OtherCars::Data[this->curveIdx][this->count]);
                     this->setX(this->getX() - (this->curveIdx * 2));
                     #endif
 
                     break;
 
                 case Direction::Right:
-                    // { 
-                    //     uint8_t val = Curves::OtherCars::Data[this->curveIdx][this->count];
 
-                    //     if (val > 10) {
-                    //         Serial.print("Other Car, ci:");
-                    //         Serial.print(this->curveIdx);
-                    //         Serial.print(", count:");
-                    //         Serial.print(this->count);
-                    //         Serial.print(", val:");
-                    //         Serial.println(val);
-                    //     }
-                    // }
                     #ifndef DEBUG_OTHER_CAR_STEER
-//                    this->setX(Curves::OtherCars::Data[this->curveIdx][this->count]);
                     this->setX(this->getX() + (this->curveIdx * 2));
                     #endif
 
@@ -105,15 +80,6 @@ struct OtherCar : public Base {
                         break;
 
                 }
-
-
-                        // Serial.print("Set Other Car, direction:");
-                        // Serial.print((uint8_t)this->direction);
-                        // Serial.print(", ci:");
-                        // Serial.print(this->curveIdx);
-                        // Serial.print(", count:");
-                        // Serial.println(this->count - 1);
-
 
             }
 

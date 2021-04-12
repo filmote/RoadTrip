@@ -26,7 +26,7 @@ void sort(OtherCar arr[], uint8_t n) {
 
 }  
 
-uint8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollision constant or car index.
+int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollision constant or car index.
 
     uint8_t collide = Constants::NoCollision;
 
@@ -103,6 +103,7 @@ uint8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisi
                         if (!sound.playing()) {
 
                             sound.tones(Sounds::Crash);
+
                         }
 
                     #endif
@@ -111,7 +112,11 @@ uint8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisi
                         Serial.println("BLOCK FB");
                     #endif
 
-                    nudgeCarForward(i);
+                    if (car.getZ() < otherCars[i].getZ() && nudgeCarForward(i)) {
+
+                        collide = collide * -1;
+
+                    }
 
                     break;
                     
@@ -218,7 +223,7 @@ void moveOtherCars(bool collisionAlready) {
 
                         if (j != i) {
 
-                            otherCar.setZ(otherCars[j].getZ() + 650);
+                            otherCar.setZ(otherCars[j].getZ() + random(200, 500));
                             break;
 
                         }
@@ -296,12 +301,16 @@ void houseKeeping() {
 
         }
 
-        for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
+        #ifdef CACTII
 
-            Vec3 &cactusPos = cactii[i];
-            cactusPos.decZ();
+            for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
 
-        }
+                Vec3 &cactusPos = cactii[i];
+                cactusPos.decZ();
+
+            }
+
+        #endif
 
     }
     else {
@@ -364,43 +373,46 @@ void houseKeeping() {
 
 }
 
-void moveCactii() {
+#ifdef CACTII
 
-    // Move cactii
+    void moveCactii() {
 
-    for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
+        // Move cactii
 
-        Vec3 &cactiiPos = cactii[i];
+        for (uint8_t i = 0; i < Constants::NumberOfCactii; i++) {
 
-        if (cactiiPos.getZ() < cameraPos.getZ() - Constants::DistToRenewCars) {
-            cactiiPos.setZ(cameraPos.getZ() + random(600, 900));
-            cactiiPos.setX(random(0,2));
+            Vec3 &cactiiPos = cactii[i];
+
+            if (cactiiPos.getZ() < cameraPos.getZ() - Constants::DistToRenewCars) {
+                cactiiPos.setZ(cameraPos.getZ() + random(600, 900));
+                cactiiPos.setX(random(0,2));
+            }
+
         }
 
     }
 
-}
+    void placeCactii() {
 
-void placeCactii() {
+        for (uint8_t i = 1; i <= Constants::NumberOfCactii; i++) {
 
-    for (uint8_t i = 1; i <= Constants::NumberOfCactii; i++) {
+            Vec3 &cactiiPos = cactii[i - 1];
 
-        Vec3 &cactiiPos = cactii[i - 1];
+            cactiiPos.setX(i % 2);
+            cactiiPos.setZ(400 + (i * 245));
 
-        cactiiPos.setX(i % 2);
-        cactiiPos.setZ(400 + (i * 245));
+        }
 
     }
 
-}
+#endif
 
-
-void nudgeCarForward(uint8_t carIdx) {
+bool nudgeCarForward(uint8_t carIdx) {
 
     OtherCar &otherCar = otherCars[carIdx];
     bool collide = false;
 
-    int16_t otherCarZ = otherCar.getZ() + otherCar.getSpeed_Display() + 1000;
+    int16_t otherCarZ = otherCar.getZ() + otherCar.getSpeed_Display() + Constants::NudgeDistance;
     int16_t otherCarX = otherCar.getX() + otherCar.getXWorld() + otherCar.getXMovement();
 
     for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
@@ -421,8 +433,11 @@ void nudgeCarForward(uint8_t carIdx) {
 
     if (!collide) {
 
-        otherCar.setZ(otherCar.getZ() + 1000);
+        otherCar.setZ(otherCar.getZ() + Constants::NudgeDistance);
+        return true;
 
     }
+
+    return false;
 
 }
