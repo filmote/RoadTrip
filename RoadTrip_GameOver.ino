@@ -29,7 +29,10 @@ void gameOver() {
     }
 
     houseKeeping();
-    moveCactii();
+
+    #ifdef CACTII
+        moveCactii();
+    #endif
     
     cameraPos.setZ(cameraPos.getZ() + gameOverVars.finalSpeed);
     cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);

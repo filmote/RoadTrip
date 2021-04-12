@@ -19,7 +19,9 @@ void title_Init() {
     //gamePlayVars.timeOfDay = 1700;
     gameState = GameState::Title;
 
-    placeCactii();
+    #ifdef CACTII
+        placeCactii();
+    #endif
     
 }   
 
@@ -131,7 +133,10 @@ void title() {
 
 
     houseKeeping();
-    moveCactii();
+
+    #ifdef CACTII
+        moveCactii();
+    #endif
     
     cameraPos.setZ(cameraPos.getZ() + 6);
     cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
