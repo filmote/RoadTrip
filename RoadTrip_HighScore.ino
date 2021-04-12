@@ -1,5 +1,4 @@
 #include "src/Utils/Arduboy2Ext.h"
-#include "src/fonts/Font4x6_Bitmaps.h"
 
 uint8_t clearScores = 0;
 
@@ -44,9 +43,9 @@ void renderHighScore(HighScore &highScore) {
 
         Slot slot = EEPROM_Utils::getSlot(x);
 
-        Sprites::drawOverwrite(xOffset, yOffset, Font4x6, slot.getChar0());
-        Sprites::drawOverwrite(xOffset + 6, yOffset, Font4x6, slot.getChar1());
-        Sprites::drawOverwrite(xOffset + 12, yOffset, Font4x6, slot.getChar2());
+        Sprites::drawOverwrite(xOffset, yOffset, Images::Font4x6, slot.getChar0());
+        Sprites::drawOverwrite(xOffset + 6, yOffset, Images::Font4x6, slot.getChar1());
+        Sprites::drawOverwrite(xOffset + 12, yOffset, Images::Font4x6, slot.getChar2());
 
 
         // Score ..
@@ -55,7 +54,7 @@ void renderHighScore(HighScore &highScore) {
             extractDigits(digits, slot.getScore());
 
             for (uint8_t i = 0, x2 = xOffset + 54; i < 6; ++i, x2 -= 5) {
-                Sprites::drawOverwrite(x2, yOffset, Font4x6, (digits[i] + 26));
+                Sprites::drawOverwrite(x2, yOffset, Images::Font4x6, (digits[i] + 26));
             }
 
         }
@@ -84,26 +83,26 @@ void renderHighScore(HighScore &highScore) {
 
         if (highScore.getCharIndex() == 0) {
             arduboy.fillRect(xOffset - 1, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
-            Sprites::drawErase(xOffset, yOffset + (highScore.getSlotNumber() * 9), Font4x6, highScore.getChar(0));
+            Sprites::drawErase(xOffset, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(0));
         }
         else {
-            Sprites::drawOverwrite(xOffset, yOffset + (highScore.getSlotNumber() * 9), Font4x6, highScore.getChar(0));
+            Sprites::drawOverwrite(xOffset, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(0));
         }
 
         if (highScore.getCharIndex() == 1) {
             arduboy.fillRect(xOffset + 5, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
-            Sprites::drawErase(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Font4x6, highScore.getChar(1));
+            Sprites::drawErase(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(1));
         }
         else {
-            Sprites::drawOverwrite(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Font4x6, highScore.getChar(1));
+            Sprites::drawOverwrite(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(1));
         }
 
         if (highScore.getCharIndex() == 2) {
             arduboy.fillRect(xOffset + 11, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
-            Sprites::drawErase(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Font4x6, highScore.getChar(2));
+            Sprites::drawErase(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(2));
         }
         else {
-            Sprites::drawOverwrite(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Font4x6, highScore.getChar(2));
+            Sprites::drawOverwrite(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(2));
         }
 
 
