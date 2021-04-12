@@ -290,41 +290,40 @@ void renderDayBanner() {
 
         Sprites::drawExternalMask(16, 8, Images::StartOfDay, Images::StartOfDay_Mask, 0, 0);
 
-        switch (arduboy.getFrameCountHalf(128)) {
+        switch ((gamePlayVars.showDayBannerCount / 50) % 2) {
 
             case true:
                 x = 2;
-                image = Images::Day; 
-                noToRender = gamePlayVars.days;
-                break;
-
-            case false:
-                x = 0;
                 image = Images::Goal; 
                 noToRender = gamePlayVars.carsPassed;
                 break;
 
+            case false:
+                x = 4;
+                image = Images::Day; 
+                noToRender = gamePlayVars.days;
+                break;
 
         }
 
         switch (noToRender) {
 
             case 1 ... 9:
-                x = x + 51;
+                x = x + 49;
                 break;
 
             case 10 ... 99:
-                x = x + 48;
+                x = x + 46;
                 break;
 
             case 100 ... 255:
-                x = x + 46;
+                x = x + 44;
                 break;
 
         }
 
         Sprites::drawOverwrite(x, 18, image, 0);
-        x = x + 18;
+        x = x + ((gamePlayVars.showDayBannerCount / 50) % 2 ? 22 : 18);
 
         {
             if (noToRender > 100)  { Sprites::drawOverwrite(x, 18, Images::Font4x6, ((noToRender / 100) + 26));  noToRender = noToRender - ((noToRender / 100) * 100); x = x + 5; }
