@@ -68,12 +68,12 @@ namespace Constants {
 
     constexpr uint8_t NewDayBannerDelay = 100;
     constexpr uint8_t NewDayBannerDelay_CountDown = 180;
-    constexpr uint8_t CarsToPass_Init = 20; 
+    constexpr uint8_t CarsToPass_Init = 30; 
     constexpr uint8_t CarsToPass_Increase = 5;
     
     constexpr uint8_t GameOver_MaxOffset = 108;
     constexpr uint8_t Title_MaxOffset = 120;
-    constexpr uint8_t NudgeDistance = 15;
+    constexpr uint8_t NudgeDistance = 12;
     
 
 

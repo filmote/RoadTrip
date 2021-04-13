@@ -81,9 +81,19 @@ struct Car : public Base {
                             this->setSpeed(this->getSpeed() * 1.15);
                             break;
 
-                        case 8193 ... 48000: 
+                        case 8193 ... 18000: 
 
                             this->setSpeed(this->getSpeed() * 1.05);
+                            break;
+
+                        case 18001 ... 36000: 
+
+                            this->setSpeed(this->getSpeed() * 1.02);
+                            break;
+
+                        case 36001 ... 48000: 
+
+                            this->setSpeed(this->getSpeed() * 1.01);
                             break;
 
                         default: break;
@@ -179,7 +189,8 @@ struct Car : public Base {
                     switch (speed) {
 
                         case 0 ... 13999:                       return 1;
-                        case 14000 ... Constants::Gear4Max:     return 2 + ((speed - 14000) / 2850);
+                        // case 14000 ... Constants::Gear4Max:     return 2 + ((speed - 14000) / 2850);
+                        case 14000 ... Constants::Gear4Max:     return 2 + ((speed - 14000) / 3000);
                         default:                                return 8;
 
                     }
@@ -189,7 +200,8 @@ struct Car : public Base {
                     switch (speed) {
 
                         case 0 ... 20999:                       return 1;
-                        case 21000 ... Constants::Gear5Max:     return 2 + ((speed - 21000) / 4100);
+//                        case 21000 ... Constants::Gear5Max:     return 2 + ((speed - 21000) / 4100);
+                        case 21000 ... Constants::Gear5Max:     return 2 + ((speed - 21000) / 3900);
                         default:                                return 8;
 
                     }

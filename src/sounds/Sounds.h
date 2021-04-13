@@ -31,7 +31,8 @@ namespace Sounds {
     };
  
     const uint16_t Crash[] PROGMEM = {
-        NOTE_C0, 45, NOTE_B1, 15, NOTE_F0, 25, NOTE_C2, 5, NOTE_F0, 15, NOTE_E1, 45, NOTE_F0, 15, TONES_END 
+        // NOTE_C0, 45, NOTE_B1, 15, NOTE_F0, 25, NOTE_C2, 5, NOTE_F0, 15, NOTE_E1, 45, NOTE_F0, 15, TONES_END 
+        NOTE_C2, 90, NOTE_E2, 15, NOTE_D2, 80, NOTE_A2, 26, TONES_END 
     };
 
     const uint16_t PassCar[] PROGMEM = {

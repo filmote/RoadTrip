@@ -429,11 +429,11 @@ void draw(bool drawOtherCars) {
             Vec3 frontMost = world.getRoadSegment(indexFrom);
             gamePlayVars.horizonX = 64 + frontMost.getX() / 4;
 
-            uint8_t idx = gamePlayVars.getTimeOfDay() == TimeOfDay::Day ? 0 : 0;
+            uint8_t idx = gamePlayVars.getTimeOfDay() == TimeOfDay::Day ? 0 : 1;
 
-            for (int16_t i = gamePlayVars.horizonX - 128; i < WIDTH; i = i + 128) {
+            for (int16_t i = gamePlayVars.horizonX - 256; i < WIDTH; i = i + 128) {
 
-                Sprites::drawExternalMask(i, endPos.getY() - 10, Images::Horizons, Images::Horizons_Mask, idx, idx);
+                Sprites::drawExternalMask(i, endPos.getY() - 9, Images::Horizons, Images::Horizons_Mask, idx, idx);
 
             }
 

@@ -66,7 +66,7 @@ void Arduboy2Ext::displayClearToPattern(uint8_t idx) {
     display(true);
     memset(sBuffer, 0xff, 1024);
 
-    for (uint8_t y = 0; y < 8; y++) {
+    for (uint8_t y = 0; y < 5; y++) {
 
         for (uint8_t x = 0; x < WIDTH; x++) {
 
