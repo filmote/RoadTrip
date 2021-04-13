@@ -152,10 +152,10 @@ void renderPlayerCar() {
 
 
     // Calculate an index for the wheel graphic using the speed ..
-    
-    uint8_t index = 34 - (car.getSpeed_Display() * 2);  // 0 - 16
 
-    if (index != 34) {
+    uint8_t index = 50 - (car.getSpeed_Display() * 2);  // 0 - 16
+
+    if (index != 50) {
         index = arduboy.getFrameCountHalf(index);
     }
     else {
@@ -174,8 +174,7 @@ void renderPlayerCar() {
 
     #ifndef DEBUG_COLLISIONS
 
-        // Sprites::drawPlusMask(43, 64 - Constants::PlayerCarHeightPX, Images::Player, index);
-        Sprites::drawExternalMask(46, 64 - Constants::PlayerCarHeightPX, Images::Player, Images::Player_Mask, index, 0);
+        Sprites::drawPlusMask(46, 64 - Constants::PlayerCarHeightPX, Images::Player, index);
 
     #else
 
