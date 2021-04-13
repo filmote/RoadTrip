@@ -73,7 +73,7 @@ namespace Constants {
     
     constexpr uint8_t GameOver_MaxOffset = 108;
     constexpr uint8_t Title_MaxOffset = 120;
-    constexpr uint8_t NudgeDistance = 12;
+    constexpr uint8_t NudgeDistance = 15;
     
 
 

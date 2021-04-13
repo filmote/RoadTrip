@@ -47,7 +47,7 @@ TitleVars titleVars;
 void setup() {
 
     arduboy.begin();
-    arduboy.setFrameRate(60);
+    arduboy.setFrameRate(30);
 
     #ifdef SOUNDS
     arduboy.audio.begin();
