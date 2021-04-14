@@ -153,14 +153,26 @@ void renderPlayerCar() {
 
     // Calculate an index for the wheel graphic using the speed ..
 
-    uint8_t index = 50 - (car.getSpeed_Display() * 2);  // 0 - 16
+    uint8_t index = 0;
+    uint8_t carSpeed = car.getSpeed_Display();
 
-    if (index != 50) {
-        index = arduboy.getFrameCountHalf(index);
+    switch (carSpeed) {
+
+        case 0 ... 1:
+            index = 0;
+            break;
+
+        case 2 ... 14:
+            index = 9 - (carSpeed / 2);
+            break;
+
+        default:
+            index = 2;
+            break;
+
     }
-    else {
-        index = 0;
-    }
+
+    index = arduboy.getFrameCountHalf(index);
   
     
     // Set car X to camera X (as car is always in the middle of screen) ..

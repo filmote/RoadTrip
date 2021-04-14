@@ -177,12 +177,12 @@ void game() {
 
     #ifndef DEBUG_MOVE_WHILE_STATIONARY
 
-    if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -500 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
+    if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -300 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
         cameraPos.setX(cameraPos.getX() - speedForSteering);
         car.setX(car.getX() - speedForSteering);
     }
 
-    if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 500 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
+    if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 300 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
         cameraPos.setX(cameraPos.getX() + speedForSteering);
         car.setX(car.getX() + speedForSteering);
     }
@@ -377,7 +377,7 @@ void game() {
         cameraPos.setZ(cameraPos.getZ() + speed);
         cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
 
-        moveOtherCars(collide != Constants::NoCollision);
+        moveOtherCars();
 
     }
 

@@ -55,15 +55,7 @@ struct Car : public Base {
 
         void changeSpeed(CarMovement carMovement) {
 
-
             uint16_t speed = this->getSpeed().getInteger();
-
-// Serial.print("Update ");
-// Serial.print(speed);
-// Serial.print(", Z ");
-// Serial.print(this->getZ());
-// Serial.print(" ");
-// Serial.println((uint8_t)carMovement);
 
             switch (carMovement) {
 
@@ -148,7 +140,7 @@ struct Car : public Base {
         uint8_t getTacho() {
 
             uint16_t speed = this->getSpeed().getInteger();
-// Serial.println(speed);
+
             switch (this->gear) {
 
                 case 0:

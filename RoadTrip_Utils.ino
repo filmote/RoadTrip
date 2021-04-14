@@ -155,7 +155,7 @@ int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisio
 
 }
 
-void moveOtherCars(bool collisionAlready) {
+void moveOtherCars() {
 
     // Sort the cars ..
 
@@ -198,15 +198,11 @@ void moveOtherCars(bool collisionAlready) {
 
         // What about into the player?
 
-        //if (!collisionAlready) {
+        if (abs(car.getX() - otherCarX) < Constants::OtherCarWidthUnits && abs((car.getZ() + car.getSpeed_Display()) - (otherCar.getZ() + otherCar.getSpeed_Display())) < Constants::OtherCarLengthUnits ) {
 
-            if (abs(car.getX() - otherCarX) < Constants::OtherCarWidthUnits && abs((car.getZ() + car.getSpeed_Display()) - (otherCar.getZ() + otherCar.getSpeed_Display())) < Constants::OtherCarLengthUnits ) {
+            collide = true;
 
-                collide = true;
-
-            }
-
-        //}
+        }
 
 
         // If no collision has occurred then move the car forward ..
