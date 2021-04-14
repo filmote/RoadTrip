@@ -219,7 +219,19 @@ void moveOtherCars() {
 
                         if (j != i) {
 
-                            otherCar.setZ(otherCars[j].getZ() + random(200, 500));
+                            int16_t dist = otherCar.getZ() - cameraPos.getZ();
+
+                            if (dist > 0) {
+
+                                otherCar.setZ(otherCars[j].getZ() + random(700 - dist, 1200 - dist));
+
+                            }
+                            else {
+
+                                otherCar.setZ(cameraPos.getZ() + random(700, 1200));
+
+                            }
+
                             break;
 
                         }

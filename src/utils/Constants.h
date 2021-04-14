@@ -73,7 +73,7 @@ namespace Constants {
     
     constexpr uint8_t GameOver_MaxOffset = 108;
     constexpr uint8_t Title_MaxOffset = 120;
-    constexpr uint8_t NudgeDistance = 15;
+    constexpr uint8_t NudgeDistance = 20;
     
 
 
@@ -92,7 +92,7 @@ namespace Constants {
     constexpr uint8_t MaxNumberOfScores         = 5;
 
                                        // 00, 01, 02, 03, 04, 05, 06, 07, 08, 09, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30 
-    constexpr uint8_t SpeedSteering[] = {  0,  4,  4,  4,  5,  6,  7,  8,  8,  9,  9, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 14, 14, 14, 15, 15, 15, 15, 15, 15  };
+    constexpr uint8_t SpeedSteering[] = {  0,  5,  5,  5,  5,  6,  7,  8,  8,  9,  9, 10, 10, 10, 11, 11, 11, 12, 12, 12, 13, 13, 14, 14, 14, 15, 15, 15, 15, 15, 15  };
 
 
 }
