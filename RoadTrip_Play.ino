@@ -122,17 +122,17 @@ void game() {
 
             }
 
-            if (arduboy.justPressed(UP_BUTTON) && car.getGear() == 0) {
+            // if (arduboy.justPressed(UP_BUTTON) && car.getGear() == 0) {
 
-                car.incGear();
+            //     car.incGear();
 
-            }
+            // }
 
-            if (arduboy.justPressed(DOWN_BUTTON) && car.getGear() == 1) {
+            // if (arduboy.justPressed(DOWN_BUTTON) && car.getGear() == 1) {
 
-                car.decGear();
+            //     car.decGear();
 
-            }
+            // }
 
             break;
 

@@ -32,20 +32,20 @@ void renderHud() {
 
         case TransmissionType::Auto:
         
-            switch (car.getGear()) {
+            // switch (car.getGear()) {
 
-                case 0:
-                    Sprites::drawExternalMask(1, 1, Images::AutoP, Images::AutoMask, 0, 0);
-                    break;
+            //     // case 0:
+            //     //     Sprites::drawExternalMask(1, 1, Images::AutoP, Images::AutoMask, 0, 0);
+            //     //     break;
 
-                case 1 ... 5:
+            //     case 1 ... 5:
                     Sprites::drawExternalMask(1, 1, Images::AutoD, Images::AutoMask, 0, 0);
                     Sprites::drawOverwrite(18, 6, Images::AutoNumbers, car.getGear() - 1);
-                    break;
+            //         break;
 
-                default: break;
+            //     default: break;
 
-            }
+            // }
             
             break;
 
