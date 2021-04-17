@@ -49,7 +49,7 @@ void title() {
             switch (titleVars.cursor) {
         
                 case 0:
-                    titleVars.titleState = TitleState::SelectTransmission;
+                    titleVars.titleState = TitleState::Aim;
                     break;
         
                 case 1:
@@ -102,6 +102,18 @@ void title() {
 
             break;
 
+        case TitleState::Aim:
+
+            Sprites::drawOverwrite(0, 0, Images::Aim, 0);
+
+            if (arduboy.justPressed(A_BUTTON)) { 
+
+                titleVars.titleState = TitleState::SelectTransmission;
+
+            }  
+
+            break;
+
         case TitleState::SelectTransmission:
 
             Sprites::drawExternalMask(27, 16, Images::TransmissionType_Auto, Images::TransmissionType_Mask, 0, 0);
@@ -147,3 +159,6 @@ void title() {
     gamePlayVars.timeOfDay = 700;
 
 }
+Your goal is to pass 
+the nominated number
+of cars each day.
