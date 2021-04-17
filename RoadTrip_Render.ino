@@ -232,62 +232,160 @@ void renderPlayerCar() {
 
 }
 
+
+void drawFastDottedLine(int16_t startPos, int16_t endPos, int16_t y, bool &color) {
+
+    // if (y < 0 || y > HEIGHT - 1) return; 
+    // if (endPos < 0) return; 
+    // if (startPos >= WIDTH) return; 
+
+    uint16_t rowOffset = (y / 8) * 128;
+    uint8_t mask = 1 << (y % 8);
+
+    // startPos = max(startPos, 0);
+    // startPos = min(startPos, WIDTH - 1);
+
+    // endPos = max(endPos, 0);
+    // endPos = min(endPos, WIDTH - 1);
+// Serial.print(y);
+// Serial.print(" ");
+// Serial.print(rowOffset);
+// Serial.print(" ");
+// Serial.print(mask);
+// Serial.print(" ");
+// Serial.print(startPos);
+// Serial.print(" ");
+// Serial.println(endPos);
+    for (int16_t x = startPos; x < endPos; ++x) {
+
+
+        // if (turnPixelOn)
+        //     buffer[rowOffset + x] |= mask;
+        // else if (turnPixelOff)
+        //     buffer[rowOffset + x] &= ~mask;
+        // else if (togglePixel)
+        //     buffer[rowOffset + x] ^= mask;
+
+        if (x >= 0 && x < WIDTH && y >=0 && y < HEIGHT) {
+            if (color)
+                arduboy.sBuffer[rowOffset + x] |= mask;
+            else 
+                arduboy.sBuffer[rowOffset + x] &= ~mask;
+
+        }
+
+        color = !color;
+
+    }
+
+}
+
+
+void drawFastSolidLine(int16_t startPos, int16_t endPos, int16_t y, bool color) {
+
+    // if (y < 0 || y > HEIGHT - 1) return; 
+    // if (endPos < 0) return; 
+    // if (startPos >= WIDTH) return; 
+
+    uint16_t rowOffset = (y / 8) * 128;
+    uint8_t mask = 1 << (y % 8);
+
+    // startPos = max(startPos, 0);
+    // startPos = min(startPos, WIDTH - 1);
+
+    // endPos = max(endPos, 0);
+    // endPos = min(endPos, WIDTH - 1);
+
+    for (int16_t x = startPos; x < endPos; ++x) {
+
+        if (x >= 0 && x < WIDTH && y >=0 && y < HEIGHT) {
+            if (color)
+                arduboy.sBuffer[rowOffset + x] |= mask;
+            else 
+                arduboy.sBuffer[rowOffset + x] &= ~mask;
+
+        }
+
+    }
+
+}
+
 void renderRoadEdge_Black(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    while (startPos <= endPos) {
-        arduboy.drawPixel(startPos, y, BLACK);
-        color = !color;
-        ++startPos;
-    }
+    // while (startPos <= endPos) {
+    //     arduboy.drawPixel(startPos, y, BLACK);
+    //     color = !color;
+    //     ++startPos;
+    // }
+    drawFastSolidLine(startPos, endPos + 1, y, BLACK);
+    startPos = endPos + 1;
 
 }
 
 void renderRoadEdge_Dark(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    while (startPos <= endPos) {
-        arduboy.drawPixel(startPos, y, color ? WHITE : BLACK);
-        color = !color;
-        ++startPos;
-    }
+    // while (startPos <= endPos) {
+    //     arduboy.drawPixel(startPos, y, color ? WHITE : BLACK);
+    //     color = !color;
+    //     ++startPos;
+    // }
+
+    drawFastDottedLine(startPos, endPos + 1, y, color);
+    startPos = endPos + 1;
 
 }
 
 void renderRoadEdge_Light(int16_t &startPos, int16_t endPos, int16_t y) {
 
-    while (startPos <= endPos) {
-        arduboy.drawPixel(startPos, y, WHITE);
-        ++startPos;
-    }
+    // while (startPos <= endPos) {
+    //     arduboy.drawPixel(startPos, y, WHITE);
+    //     ++startPos;
+    // }
+    drawFastSolidLine(startPos, endPos + 1, y, WHITE);
+    startPos = endPos + 1;
 
 }
 
 void renderRoad_Black(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    while (startPos < endPos) {
-        arduboy.drawPixel(startPos, y, BLACK );
-        ++startPos;
-        color = !color;
-    }     
+    // while (startPos < endPos) {
+    //     arduboy.drawPixel(startPos, y, BLACK );
+    //     ++startPos;
+    //     color = !color;
+    // }     
+    drawFastSolidLine(startPos, endPos, y, BLACK);
+    startPos = endPos;
 
 }
 
 void renderRoad_Dither_Dark(int16_t &startPos, int16_t endPos, int16_t y, bool &dither, bool &color) {
 
-    while (startPos < endPos) {
-        arduboy.drawPixel(startPos, y, dither && color ? WHITE : BLACK);
-        ++startPos;
-        color = !color;
-    }     
+    // while (startPos < endPos) {
+    //     arduboy.drawPixel(startPos, y, dither && color ? WHITE : BLACK);
+    //     ++startPos;
+    //     color = !color;
+    // }     
+
+    if (dither) {
+        drawFastDottedLine(startPos, endPos, y, color);
+        startPos = endPos; 
+    }
+    else {
+        drawFastSolidLine(startPos, endPos, y, BLACK);
+        startPos = endPos;
+    }
 
 }
 
 void renderRoad_Dither_Light(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    while (startPos < endPos) {
-        arduboy.drawPixel(startPos, y, color ? BLACK : WHITE);
-        ++startPos;
-        color = !color;
-    }     
+    // while (startPos < endPos) {
+    //     arduboy.drawPixel(startPos, y, color ? BLACK : WHITE);
+    //     ++startPos;
+    //     color = !color;
+    // }    
+    drawFastDottedLine(startPos, endPos, y, color);
+    startPos = endPos; 
 
 }
 

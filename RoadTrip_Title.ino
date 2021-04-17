@@ -146,6 +146,6 @@ void title() {
 
     gamePlayVars.timeOfDay = 700;
 
-Serial.println(arduboy.getLastFrameDuration());
+//Serial.println(arduboy.getLastFrameDuration());
 
 }
