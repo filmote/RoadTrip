@@ -2,7 +2,7 @@
 
 // - Debug ------------------------------
 
-#define _DEBUG
+#define DEBUG
 #define _DEBUG_COLLISIONS
 #define _DEBUG_STRAIGHT_ROAD
 #define _DEBUG_LEVEL_ROAD
