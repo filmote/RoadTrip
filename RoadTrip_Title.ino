@@ -22,6 +22,10 @@ void title_Init() {
     #ifdef CACTII
         placeCactii();
     #endif
+
+    #ifdef DEBUG_COLLISIONS
+        titleVars.offset = Constants::Title_MaxOffset - 3;
+    #endif
     
 }   
 
@@ -77,6 +81,9 @@ void title() {
                 if (arduboy.justPressed(A_BUTTON)) { 
 
                     titleVars.flyIn = false;
+                    #ifdef DEBUG_COLLISIONS
+                        titleVars.offset = 3;
+                    #endif
 
                 }         
                 
