@@ -13,9 +13,6 @@
 
 #define ROCKS
 #define CACTII
-#define _SIGNPOSTS
-#define _LARGER_SIGNPOSTS
-#define SMALLER_SIGNPOSTS
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
 #define SOUNDS
