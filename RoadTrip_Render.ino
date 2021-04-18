@@ -263,23 +263,12 @@ void drawFastSolidLine(int16_t startPos, int16_t endPos, int16_t y, bool color) 
 
 void renderRoadEdge_Black(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    // while (startPos <= endPos) {
-    //     arduboy.drawPixel(startPos, y, BLACK);
-    //     color = !color;
-    //     ++startPos;
-    // }
     drawFastSolidLine(startPos, endPos + 1, y, BLACK);
     startPos = endPos + 1;
 
 }
 
 void renderRoadEdge_Dark(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
-
-    // while (startPos <= endPos) {
-    //     arduboy.drawPixel(startPos, y, color ? WHITE : BLACK);
-    //     color = !color;
-    //     ++startPos;
-    // }
 
     drawFastDottedLine(startPos, endPos + 1, y, color);
     startPos = endPos + 1;
@@ -288,10 +277,6 @@ void renderRoadEdge_Dark(int16_t &startPos, int16_t endPos, int16_t y, bool &col
 
 void renderRoadEdge_Light(int16_t &startPos, int16_t endPos, int16_t y) {
 
-    // while (startPos <= endPos) {
-    //     arduboy.drawPixel(startPos, y, WHITE);
-    //     ++startPos;
-    // }
     drawFastSolidLine(startPos, endPos + 1, y, WHITE);
     startPos = endPos + 1;
 
@@ -299,23 +284,12 @@ void renderRoadEdge_Light(int16_t &startPos, int16_t endPos, int16_t y) {
 
 void renderRoad_Black(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    // while (startPos < endPos) {
-    //     arduboy.drawPixel(startPos, y, BLACK );
-    //     ++startPos;
-    //     color = !color;
-    // }     
     drawFastSolidLine(startPos, endPos, y, BLACK);
     startPos = endPos;
 
 }
 
 void renderRoad_Dither_Dark(int16_t &startPos, int16_t endPos, int16_t y, bool &dither, bool &color) {
-
-    // while (startPos < endPos) {
-    //     arduboy.drawPixel(startPos, y, dither && color ? WHITE : BLACK);
-    //     ++startPos;
-    //     color = !color;
-    // }     
 
     if (dither) {
         drawFastDottedLine(startPos, endPos, y, color);
@@ -330,11 +304,6 @@ void renderRoad_Dither_Dark(int16_t &startPos, int16_t endPos, int16_t y, bool &
 
 void renderRoad_Dither_Light(int16_t &startPos, int16_t endPos, int16_t y, bool &color) {
 
-    // while (startPos < endPos) {
-    //     arduboy.drawPixel(startPos, y, color ? BLACK : WHITE);
-    //     ++startPos;
-    //     color = !color;
-    // }    
     drawFastDottedLine(startPos, endPos, y, color);
     startPos = endPos; 
 
