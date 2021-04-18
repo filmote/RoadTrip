@@ -59,7 +59,7 @@ void setup() {
 
 void loop() {
 
-    if ( !arduboy.nextFrame() ) return;    
+    if (!arduboy.nextFrame()) return;    
 	arduboy.pollButtons();
 
     switch (gameState) {

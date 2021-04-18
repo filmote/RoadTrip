@@ -57,28 +57,26 @@ bool Arduboy2Ext::isFrameCount(uint8_t mod, uint8_t val) const {
 
 }
 
+uint8_t Arduboy2Ext::getLastFrameDuration() const {
 
-void Arduboy2Ext::displayClearToPattern(uint8_t idx) {
-
-
-    const uint8_t pattern[] = { 32, 2, 136, 34, 85, 170, 119, 221, 223, 253, 0, 0, 255, 255 };
-
-    display(true);
-    memset(sBuffer, 0xff, 1024);
-
-    for (uint8_t y = 0; y < 5; y++) {
-
-        for (uint8_t x = 0; x < WIDTH; x++) {
-
-            sBuffer[(y * WIDTH) + x] = pattern[(idx * 2) + (x % 2)];
-            
-        }
-
-    }
-
+    return this->lastFrameDurationMs;
 
 }
 
+void Arduboy2Ext::displayClearToPattern(uint8_t idx) {
+
+    const uint8_t pattern[] = { 32, 2, 136, 34, 85, 170, 119, 221, 223, 253, 0, 0, 255, 255 };
+    display();
+    
+    uint8_t even = pattern[(idx * 2)];
+    uint8_t odd  = pattern[(idx * 2)+1];
+    
+    for (uint16_t x = 0; x < 5 * WIDTH; x += 2) {
+        sBuffer[x + 0] = even;
+        sBuffer[x + 1] = odd;
+    }
+
+}
 
 /* ----------------------------------------------------------------------------
  *  Draw a horizontal dotted line. 

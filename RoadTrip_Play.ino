@@ -37,6 +37,9 @@ void game_Init() {
 
     gameState = GameState::Game;
 
+    #ifdef DEBUG_COLLISIONS
+        gamePlayVars.showDayBannerCount = 1;
+    #endif
 }
 
 
@@ -122,17 +125,17 @@ void game() {
 
             }
 
-            if (arduboy.justPressed(UP_BUTTON) && car.getGear() == 0) {
+            // if (arduboy.justPressed(UP_BUTTON) && car.getGear() == 0) {
 
-                car.incGear();
+            //     car.incGear();
 
-            }
+            // }
 
-            if (arduboy.justPressed(DOWN_BUTTON) && car.getGear() == 1) {
+            // if (arduboy.justPressed(DOWN_BUTTON) && car.getGear() == 1) {
 
-                car.decGear();
+            //     car.decGear();
 
-            }
+            // }
 
             break;
 
@@ -174,23 +177,45 @@ void game() {
     }
     uint8_t speedForSteering = Constants::SpeedSteering[speed];
 
+    // if (speed > 31) {
+    //     Serial.println("*************SAJKDHBASJDHBASJ<HDBASJKHDBASJHBDASJHKDBASJKHDB");
+    // }
 
-    #ifndef DEBUG_MOVE_WHILE_STATIONARY
 
-    if (arduboy.pressed(LEFT_BUTTON) && car.getX() > -300 && moveCar(-speedForSteering, 0) == Constants::NoCollision) {
-        cameraPos.setX(cameraPos.getX() - speedForSteering);
-        car.setX(car.getX() - speedForSteering);
-    }
-
-    if (arduboy.pressed(RIGHT_BUTTON) && car.getX() < 300 && moveCar(speedForSteering, 0) == Constants::NoCollision) {
-        cameraPos.setX(cameraPos.getX() + speedForSteering);
-        car.setX(car.getX() + speedForSteering);
-    }
-
+    // Steering ..
+    
     Vec3 segClosest = world.getRoadSegment(0, car.getZ());
     Vec3 segNext = world.getRoadSegment(car.getZ(), car.getZ() + UPM);
 
     int16_t carOffsetOnRoad = car.getX() - ((segClosest.getX() + segNext.getX()) / 2);
+
+    if (arduboy.pressed(LEFT_BUTTON) && carOffsetOnRoad > -300) {
+
+        #ifdef DEBUG_COLLISIONS
+            Serial.print("Left - ");
+        #endif
+
+        if (moveCar(-speedForSteering, 0) == Constants::NoCollision) {
+            cameraPos.setX(cameraPos.getX() - speedForSteering);
+            car.setX(car.getX() - speedForSteering);
+        }
+
+    }
+
+    if (arduboy.pressed(RIGHT_BUTTON) && carOffsetOnRoad < 300) {
+
+        #ifdef DEBUG_COLLISIONS
+            Serial.print("Right -");
+        #endif
+
+        if (moveCar(speedForSteering, 0) == Constants::NoCollision) {
+            cameraPos.setX(cameraPos.getX() + speedForSteering);
+            car.setX(car.getX() + speedForSteering);
+        }
+
+    }
+
+
 
     if (speed > 0 && gamePlayVars.brakeCount == 0) {
 
@@ -231,24 +256,6 @@ void game() {
         }
 
     }
-
-    #endif
-
-    #ifdef DEBUG_MOVE_WHILE_STATIONARY
-
-    if (arduboy.pressed(LEFT_BUTTON)) {
-        moveCar(-2, 0);
-        cameraPos.setX(cameraPos.getX() - 2);
-        car.setX(car.getX() - (speed / 2));
-    }
-
-    if (arduboy.pressed(RIGHT_BUTTON)) {
-        moveCar(2, 0);
-        cameraPos.setX(cameraPos.getX() + 2);
-        car.setX(car.getX() + (speed / 2));
-    }
-
-    #endif
 
 
     int8_t collide = Constants::NoCollision;

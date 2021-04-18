@@ -28,6 +28,16 @@ void sort(OtherCar arr[], uint8_t n) {
 
 int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollision constant or car index.
 
+    #ifdef DEBUG_COLLISIONS
+
+        Serial.print("moveCars(");
+        Serial.print(xMovement);
+        Serial.print(",");
+        Serial.print(zMovement);
+        Serial.println(")");
+
+    #endif
+
     uint8_t collide = Constants::NoCollision;
 
     for (uint8_t i = 0; i < gamePlayVars.numberOfOtherCars; i++) {
@@ -49,10 +59,6 @@ int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisio
         int16_t xOverlap = (car.getX() + xMovement) - (otherCar.getX() + otherCar.getXWorld());
         int16_t zOverlap = (car.getZ() + zMovement) - otherCar.getZ();
 
-// Serial.print(xOverlap);
-// Serial.print(" ");
-// Serial.println(zOverlap);
-
         if (abs(xOverlap) < Constants::OtherCarWidthUnits && abs(zOverlap) < Constants::OtherCarLengthUnits) {
                     
             #ifdef DEBUG_COLLISIONS
@@ -69,7 +75,7 @@ int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisio
 
             if (xMovement != 0) { // Move left or right ..
 
-                if (abs(zOverlap) < Constants::CollisionTollerance) {
+                if (abs(zOverlap) < Constants::CollisionTollerance_Z) {
 
                     collide = i;
                                 
@@ -94,7 +100,7 @@ int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisio
 
             if (zMovement != 0) { // Move front or back ..
 
-                if (abs(xOverlap) < Constants::CollisionTollerance) {
+                if (abs(xOverlap) < Constants::CollisionTollerance_X) {
 
                     collide = i;
                                 
@@ -137,17 +143,17 @@ int8_t moveCar(int16_t xMovement, int16_t zMovement) { // will return NoCollisio
 
         }
 
-        #ifdef DEBUG_COLLISIONS
+        // #ifdef DEBUG_COLLISIONS
 
-            Serial.print("B P ");
-            car.printPos();
-            Serial.print(" = O(");
-            Serial.print(i);
-            Serial.print(") ");
-            otherCar.printPos();
-            Serial.println(" ");
+        //     Serial.print("B P ");
+        //     car.printPos();
+        //     Serial.print(" = O(");
+        //     Serial.print(i);
+        //     Serial.print(") ");
+        //     otherCar.printPos();
+        //     Serial.println(" ");
 
-        #endif
+        // #endif
     }
 
 

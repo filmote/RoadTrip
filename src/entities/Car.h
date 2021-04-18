@@ -208,7 +208,7 @@ struct Car : public Base {
 
             UQ16x16 speed = 0;
 
-            this->setGear(0);
+            this->setGear(this->transmissionType == TransmissionType::Auto ? 1 : 0);
             this->setSpeed(speed);
             this->setZ(95);
             this->setX(0);
