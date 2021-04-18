@@ -147,5 +147,6 @@ enum class TransmissionType : uint8_t {
 
 enum class TitleState : uint8_t {
     StartGame,
+    Aim,
     SelectTransmission,
 };
