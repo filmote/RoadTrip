@@ -32,21 +32,8 @@ void renderHud() {
 
         case TransmissionType::Auto:
         
-            // switch (car.getGear()) {
-
-            //     // case 0:
-            //     //     Sprites::drawExternalMask(1, 1, Images::AutoP, Images::AutoMask, 0, 0);
-            //     //     break;
-
-            //     case 1 ... 5:
-                    Sprites::drawExternalMask(1, 1, Images::AutoD, Images::AutoMask, 0, 0);
-                    Sprites::drawOverwrite(18, 6, Images::AutoNumbers, car.getGear() - 1);
-            //         break;
-
-            //     default: break;
-
-            // }
-            
+            Sprites::drawExternalMask(1, 1, Images::AutoD, Images::AutoMask, 0, 0);
+            Sprites::drawOverwrite(18, 6, Images::AutoNumbers, car.getGear() - 1);
             break;
 
     }
@@ -235,36 +222,10 @@ void renderPlayerCar() {
 
 void drawFastDottedLine(int16_t startPos, int16_t endPos, int16_t y, bool &color) {
 
-    // if (y < 0 || y > HEIGHT - 1) return; 
-    // if (endPos < 0) return; 
-    // if (startPos >= WIDTH) return; 
-
     uint16_t rowOffset = (y / 8) * 128;
     uint8_t mask = 1 << (y % 8);
 
-    // startPos = max(startPos, 0);
-    // startPos = min(startPos, WIDTH - 1);
-
-    // endPos = max(endPos, 0);
-    // endPos = min(endPos, WIDTH - 1);
-// Serial.print(y);
-// Serial.print(" ");
-// Serial.print(rowOffset);
-// Serial.print(" ");
-// Serial.print(mask);
-// Serial.print(" ");
-// Serial.print(startPos);
-// Serial.print(" ");
-// Serial.println(endPos);
     for (int16_t x = startPos; x < endPos; ++x) {
-
-
-        // if (turnPixelOn)
-        //     buffer[rowOffset + x] |= mask;
-        // else if (turnPixelOff)
-        //     buffer[rowOffset + x] &= ~mask;
-        // else if (togglePixel)
-        //     buffer[rowOffset + x] ^= mask;
 
         if (x >= 0 && x < WIDTH && y >=0 && y < HEIGHT) {
             if (color)
@@ -283,18 +244,8 @@ void drawFastDottedLine(int16_t startPos, int16_t endPos, int16_t y, bool &color
 
 void drawFastSolidLine(int16_t startPos, int16_t endPos, int16_t y, bool color) {
 
-    // if (y < 0 || y > HEIGHT - 1) return; 
-    // if (endPos < 0) return; 
-    // if (startPos >= WIDTH) return; 
-
     uint16_t rowOffset = (y / 8) * 128;
     uint8_t mask = 1 << (y % 8);
-
-    // startPos = max(startPos, 0);
-    // startPos = min(startPos, WIDTH - 1);
-
-    // endPos = max(endPos, 0);
-    // endPos = min(endPos, WIDTH - 1);
 
     for (int16_t x = startPos; x < endPos; ++x) {
 

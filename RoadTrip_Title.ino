@@ -16,7 +16,7 @@ void title_Init() {
     world.reset();
     gamePlayVars.reset();
     titleVars.reset();
-    //gamePlayVars.timeOfDay = 1700;
+
     gameState = GameState::Title;
 
     #ifdef CACTII
@@ -54,6 +54,7 @@ void title() {
         
                 case 0:
                     titleVars.titleState = TitleState::Aim;
+                    titleVars.flyIn = true;
                     break;
         
                 case 1:
@@ -73,8 +74,8 @@ void title() {
 
         case TitleState::StartGame:
 
-            Sprites::drawPlusMask(WIDTH - titleVars.offset, 7, Images::RoadTrip_00, 0);
-            Sprites::drawPlusMask(-69 + titleVars.offset, 35, Images::RoadTrip_01, 0);
+            Sprites::drawPlusMask(WIDTH - titleVars.offset, 8, Images::RoadTrip_00, 0);
+            Sprites::drawPlusMask(-69 + titleVars.offset, 34, Images::RoadTrip_01, 0);
         
             if (titleVars.offset == Constants::Title_MaxOffset) {
 
@@ -111,7 +112,20 @@ void title() {
 
         case TitleState::Aim:
 
-            Sprites::drawOverwrite(0, 0, Images::Aim, 0);
+
+            arduboy.fillRect(22, 12, 84, 42, BLACK);
+            Sprites::drawOverwrite(22, 12, Images::Corner_TL, 0);
+            Sprites::drawOverwrite(22, 46, Images::Corner_BL, 0);
+            Sprites::drawOverwrite(103, 12, Images::Corner_TR, 0);
+            Sprites::drawOverwrite(103, 46, Images::Corner_BR, 0);
+
+            arduboy.drawFastHLine(25, 13, 78, WHITE);
+            arduboy.drawFastHLine(25, 52, 78, WHITE);
+
+            arduboy.drawFastVLine(23, 20, 32, WHITE);
+            arduboy.drawFastVLine(104, 20, 32, WHITE);
+
+            Sprites::drawOverwrite(28, 16, Images::Aim, 0);
 
             if (arduboy.justPressed(A_BUTTON)) { 
 
@@ -125,7 +139,6 @@ void title() {
 
             Sprites::drawExternalMask(27, 16, Images::TransmissionType_Auto, Images::TransmissionType_Mask, 0, 0);
             Sprites::drawExternalMask(69, 16, Images::TransmissionType_Manual, Images::TransmissionType_Mask, 0, 0);
-
             Sprites::drawExternalMask(25 + (car.getTransmissionType() == TransmissionType::Manual ? 42 : 0), 14, Images::TransmissionType_Highlight, Images::TransmissionType_Highlight_Mask, 0, 0);
 
             if (arduboy.justPressed(A_BUTTON)) { 
@@ -165,9 +178,4 @@ void title() {
 
     gamePlayVars.timeOfDay = 700;
 
-//Serial.println(arduboy.getLastFrameDuration());
-
 }
-Your goal is to pass 
-the nominated number
-of cars each day.

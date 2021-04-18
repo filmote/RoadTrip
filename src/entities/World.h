@@ -158,6 +158,12 @@ struct World {
                 
             }
 
+            this->vecHeight.setDirection(Direction::None);
+            this->vecHeight.setCount(static_cast<uint8_t>(random(5, 20)));
+
+            this->vecTurn.setDirection(Direction::None);
+            this->vecTurn.setCount(static_cast<uint8_t>(random(5, 20)));
+
         }
 
 };
