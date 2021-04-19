@@ -47,11 +47,13 @@ void EEPROM_Utils::initEEPROM(bool forceClear) {
         EEPROM.update(EEPROM_START_C1, letter1);
         EEPROM.update(EEPROM_START_C2, letter2);
 
-        for (uint8_t x = 0; x < Constants::MaxNumberOfScores; x++) {
+        for (uint8_t x = 0; x < Constants::MaxNumberOfScores * 5; x++) {
 
-            EEPROM.update(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x), 0);
-            EEPROM.update(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 1, 0);
-            EEPROM.update(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 2, 0);
+            EEPROM.update(EEPROM_TOP_START + x, 0);
+
+        }
+
+        for (uint8_t x = 0; x < Constants::MaxNumberOfScores; x++) {
 
             EEPROM.put(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 3, score);
             score = score - 2;
@@ -69,7 +71,6 @@ void EEPROM_Utils::initEEPROM(bool forceClear) {
 Slot EEPROM_Utils::getSlot(uint8_t x) {
 
     Slot slot;
-
 
     slot.setChar0(EEPROM.read(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x)));
     slot.setChar1(EEPROM.read(EEPROM_TOP_START + (EEPROM_ENTRY_SIZE * x) + 1));

@@ -14,7 +14,6 @@ void HighScore_Init() {
 
     world.reset();
     gamePlayVars.reset();
-    //gamePlayVars.timeOfDay = 1700;
     gameState = GameState::HighScore;
 
     #ifdef CACTII
@@ -84,24 +83,27 @@ void renderHighScore(HighScore &highScore) {
         }
 
         if (highScore.getCharIndex() == 0) {
-            arduboy.fillRect(xOffset - 1, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
-            Sprites::drawErase(xOffset, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(0));
+            renderChar(xOffset, yOffset, 0, highScore);
+            // arduboy.fillRect(xOffset - 1, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
+            // Sprites::drawErase(xOffset, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(0));
         }
         else {
             Sprites::drawOverwrite(xOffset, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(0));
         }
 
         if (highScore.getCharIndex() == 1) {
-            arduboy.fillRect(xOffset + 5, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
-            Sprites::drawErase(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(1));
+            renderChar(xOffset, yOffset, 1, highScore);
+            // arduboy.fillRect(xOffset + 5, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
+            // Sprites::drawErase(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(1));
         }
         else {
             Sprites::drawOverwrite(xOffset + 6, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(1));
         }
 
         if (highScore.getCharIndex() == 2) {
-            arduboy.fillRect(xOffset + 11, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
-            Sprites::drawErase(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(2));
+            renderChar(xOffset, yOffset, 2, highScore);
+            // arduboy.fillRect(xOffset + 11, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
+            // Sprites::drawErase(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(2));
         }
         else {
             Sprites::drawOverwrite(xOffset + 12, yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(2));
@@ -180,5 +182,17 @@ void renderHighScore(HighScore &highScore) {
     cameraPos.setZ(cameraPos.getZ() + 6);
     cameraPos.setY(world.roadHeightAt(cameraPos.getZ() + 2 * UPM) + UPM);
     gamePlayVars.timeOfDay = 1700;
+
+}
+
+void renderChar(uint8_t xOffset, uint8_t yOffset, uint8_t charIndex, HighScore &highScore) {
+
+    // if (highScore.getCharIndex() == charIndex) {
+        arduboy.fillRect(xOffset + (charIndex * 6) - 1, yOffset + (highScore.getSlotNumber() * 9) - 1, 6, 8, WHITE);
+        Sprites::drawErase(xOffset + (charIndex * 6), yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(charIndex));
+    // }
+    // else {
+    //     Sprites::drawOverwrite(xOffset + (charIndex * 6), yOffset + (highScore.getSlotNumber() * 9), Images::Font4x6, highScore.getChar(charIndex));
+    // }
 
 }

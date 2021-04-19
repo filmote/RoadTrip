@@ -32,7 +32,7 @@ namespace Constants {
     constexpr uint8_t PlayerCarHeightPX = 17;
     constexpr uint8_t OtherCarWidthUnits = 74;
     constexpr uint8_t OtherCarLengthUnits = 60;
-    constexpr uint8_t CollisionTollerance_X = 70;
+    constexpr uint8_t CollisionTollerance_X = 68;
     constexpr uint8_t CollisionTollerance_Z = 50;
 
     constexpr uint16_t SpeedDiv = 1800;//3000;
