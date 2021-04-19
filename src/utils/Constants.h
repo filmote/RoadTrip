@@ -15,7 +15,7 @@
 #define CACTII
 #define DISPLAY_WIDTH 128
 #define DISPLAY_HEIGHT 64
-#define _SOUNDS
+#define SOUNDS
 #define _SHOW_GOAL
 
 #define UPM 64 // int16_ts per meter
@@ -65,7 +65,7 @@ namespace Constants {
     constexpr uint8_t PROGMEM GearboxY[] = { 0, 1, 13, 1, 13, 1 };
 
     constexpr uint8_t NewDayBannerDelay = 100;
-    constexpr uint8_t NewDayBannerDelay_CountDown = 180;
+    constexpr uint8_t NewDayBannerDelay_CountDown = 130;
     constexpr uint8_t CarsToPass_Init = 30; 
     constexpr uint8_t CarsToPass_Increase = 5;
     

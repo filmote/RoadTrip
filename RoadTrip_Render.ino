@@ -429,43 +429,43 @@ void renderLights() {
                 arduboy.setRGBled(0, 0, 0);
                 break;
 
-            case 20 ... 59:
+            case 20 ... 49:
                 renderLights_Shown(7);
                 break;
 
-            case 60:
+            case 50:
                 renderLights_Shown(7);
                 arduboy.setRGBled(0, 32, 0);
                 #ifdef SOUNDS
-                    if (!sound.playing()) sound.tones(Sounds::Lights_Long);
+                    sound.tones(Sounds::Lights_Long);
                 #endif
                 break;
 
-            case 61 ... 99:
+            case 51 ... 79:
                 renderLights_Shown(3);
                 break;
 
-            case 100:
+            case 80:
                 renderLights_Shown(3);
                 arduboy.setRGBled(32, 0, 32);
                 #ifdef SOUNDS
-                    if (!sound.playing()) sound.tones(Sounds::Lights_Short);
+                    sound.tones(Sounds::Lights_Short);
                 #endif
                 break;
 
-            case 101 ... 139:
+            case 81 ... 109:
                 renderLights_Shown(1);
                 break;
 
-            case 140:
+            case 110:
                 renderLights_Shown(1);
                 arduboy.setRGBled(32, 0, 0);
                 #ifdef SOUNDS
-                    if (!sound.playing()) sound.tones(Sounds::Lights_Short);
+                    sound.tones(Sounds::Lights_Short);
                 #endif
                 break;
 
-            case 141 ... 180:
+            case 111 ... 130:
                 break;
 
         }
