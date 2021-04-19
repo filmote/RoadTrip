@@ -68,7 +68,7 @@ void title() {
     }
 
 
-    draw(false);
+    draw(false, true);
 
     switch (titleVars.titleState) {
 

@@ -15,7 +15,7 @@ void gameOver_Init() {
 //
 void gameOver() {
 
-    draw(false);
+    draw(false, true);
 
     renderPlayerCar();
     renderHud();

@@ -64,7 +64,7 @@ struct World {
 
         }
 
-        void addRoadSegment(uint8_t index) {
+        void addRoadSegment(uint8_t index, bool noCurves) {
 
             uint8_t modOld = index % ROAD_SEGMENTS;
             uint8_t modNew = (index + 1) % ROAD_SEGMENTS;
@@ -79,7 +79,9 @@ struct World {
             #endif
 
             #ifndef DEBUG_STRAIGHT_ROAD
-            segmentNew.setX(vecTurn.getMovement());
+            if (!noCurves) {
+                segmentNew.setX(vecTurn.getMovement());
+            }
             #endif
 
             vecHeight.update();

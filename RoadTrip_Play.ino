@@ -125,18 +125,6 @@ void game() {
 
             }
 
-            // if (arduboy.justPressed(UP_BUTTON) && car.getGear() == 0) {
-
-            //     car.incGear();
-
-            // }
-
-            // if (arduboy.justPressed(DOWN_BUTTON) && car.getGear() == 1) {
-
-            //     car.decGear();
-
-            // }
-
             break;
 
     }
@@ -144,7 +132,7 @@ void game() {
 
     // Render screen ..
 
-    draw(true);
+    draw(true, false);
     renderPlayerCar();
     renderHud();
 
@@ -176,10 +164,6 @@ void game() {
 
     }
     uint8_t speedForSteering = Constants::SpeedSteering[speed];
-
-    // if (speed > 31) {
-    //     Serial.println("*************SAJKDHBASJDHBASJ<HDBASJKHDBASJHBDASJHKDBASJKHDB");
-    // }
 
 
     // Steering ..
@@ -394,7 +378,7 @@ void game() {
 // ----------------------------------------------------------------------------
 // Render the screen .. 
 //
-void draw(bool drawOtherCars) {
+void draw(bool drawOtherCars, bool noCurves) {
     
     Vec3 startPos, endPos;
 
@@ -406,7 +390,7 @@ void draw(bool drawOtherCars) {
     // IndexTo is the last position and is an ever increasing value.
 
     if (gamePlayVars.oldIndexTo != indexTo + 5) {
-        world.addRoadSegment(indexTo + 5);
+        world.addRoadSegment(indexTo + 5, noCurves);
         gamePlayVars.oldIndexTo = indexTo + 5;
     }
 
